@@ -1,0 +1,31 @@
+.input {
+  border-radius: 10px;
+  border: none;
+  padding: 1vh 3vw;
+  background-color: #eef0f2;
+  font-weight: bold;
+  font-size: 30px;
+  font-style: italic;
+}
+
+.input::-webkit-input-placeholder {
+  color: rgba(20, 20, 20, 0.46);
+}
+
+.button {
+  border-radius: 10px;
+  border: none;
+  padding: 1vh 3vw;
+  cursor: pointer;
+}
+
+.button:hover {
+  filter: brightness(0.8);
+}
+
+.primary-button {
+  background: #0d21a1;
+  color: rgba(238, 240, 242, 1);
+  font-weight: bold;
+  font-size: 30px;
+}

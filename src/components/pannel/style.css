@@ -1,0 +1,22 @@
+.pannel {
+  background-color: #eef0f2;
+  height: 100vh;
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.divider {
+  width: 80%;
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.18);
+}
+
+.onlineUsers {
+  font-weight: bold;
+  margin-top: 1vh;
+}
