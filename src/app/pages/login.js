@@ -4,7 +4,7 @@ import { SocketContext } from "../context/ws";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/slices/user";
 import { PrimaryButton, PrimaryInput } from "../../components/buttons/index";
-import logo from "../images/logo.png";
+import logo from "../assets/images/logo.png";
 import { Layout } from "../../components/layout";
 
 export const Login = () => {

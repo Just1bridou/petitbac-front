@@ -1,6 +1,6 @@
 import "./style.css";
 
-import logo from "../../app/images/logo.png";
+import logo from "../../app/assets/images/logo.png";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import lod_ from "lodash";

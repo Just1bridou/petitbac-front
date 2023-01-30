@@ -33,6 +33,7 @@ const WebSockets = () => {
   }
 
   function initMainThread() {
+    socket.removeAllListeners();
     /**
      * When socket is connected, store random uuid linked to the user, used for requests
      */
@@ -54,9 +55,7 @@ const WebSockets = () => {
     /**
      * Update online users
      */
-    console.log("listen socket users online");
     socket.on("updateOnlineUsers", ({ onlineUsers }) => {
-      console.log("updateOnlineUsers", onlineUsers);
       dispatch(updateUser({ onlineUsers }));
     });
     /**
@@ -80,14 +79,12 @@ const WebSockets = () => {
    * On init
    */
   useEffect(() => {
-    console.log("use effect");
     if (!ws.uuid) {
       initMainThread();
     } else {
       /**
        * If user reload the page, save new socket connection to the server
        */
-      console.log("Save user", ws.uuid);
       socket.emit("saveUser", { uuid: ws.uuid });
     }
   }, [ws]);

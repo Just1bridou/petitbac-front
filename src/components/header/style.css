@@ -1,0 +1,14 @@
+.headerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2vh;
+}
+
+h1 {
+  font-size: 4vw;
+  margin: 0;
+  padding: 0;
+}

@@ -7,7 +7,7 @@ import WebSockets from "./app/ws";
 import { AccessContent } from "./app/pages/AccessContent";
 import { Lobby } from "./app/pages/lobby";
 import { Waiting } from "./app/pages/waiting";
-import logo from "./app/images/logo.png";
+import logo from "./app/assets/images/logo.png";
 const Home = () => {
   return (
     <section>

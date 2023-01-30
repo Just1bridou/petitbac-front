@@ -1,4 +1,6 @@
 import "./buttons.css";
+import useSound from "use-sound";
+import pop from "../../app/assets/sounds/pop.mp3";
 
 export const PrimaryInput = ({ placeholder, value, onChange, ...rest }) => {
   return (
@@ -13,8 +15,15 @@ export const PrimaryInput = ({ placeholder, value, onChange, ...rest }) => {
 };
 
 export const PrimaryButton = ({ value, onClick, ...rest }) => {
+  const [play] = useSound(pop);
+
+  function handleClick() {
+    play();
+    onClick();
+  }
+
   return (
-    <button onClick={onClick} className="button primary-button" {...rest}>
+    <button onClick={handleClick} className="button primary-button" {...rest}>
       {value}
     </button>
   );

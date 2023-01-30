@@ -1,75 +1,75 @@
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-Regular.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-Regular.ttf");
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-Bold.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-Bold.ttf");
   font-weight: bold;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-Italic.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-Italic.ttf");
   font-style: italic;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-BoldItalic.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-BoldItalic.ttf");
   font-weight: bold;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-Light.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-Light.ttf");
   font-weight: 300;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-LightItalic.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-LightItalic.ttf");
   font-weight: 300;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-SemiBold.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-SemiBold.ttf");
   font-weight: 600;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-SemiBoldItalic.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-SemiBoldItalic.ttf");
   font-weight: 600;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-ExtraLight.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-ExtraLight.ttf");
   font-weight: 200;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-ExtraLightItalic.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-ExtraLightItalic.ttf");
   font-weight: 200;
   font-style: italic;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-Black.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-Black.ttf");
   font-weight: 900;
 }
 
 @font-face {
   font-family: "Source Sans";
-  src: url("./app/fonts/SourceSansPro-BlackItalic.ttf");
+  src: url("./app/assets/fonts/SourceSansPro-BlackItalic.ttf");
   font-weight: 900;
   font-style: italic;
 }
