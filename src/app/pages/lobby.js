@@ -1,5 +1,4 @@
 import { useContext, useRef } from "react";
-import { AccessContent } from "./AccessContent";
 import { SocketContext } from "../context/ws";
 import { useDispatch, useSelector } from "react-redux";
 import { createParty } from "../redux/slices/party";
@@ -67,60 +66,58 @@ export const Lobby = () => {
   };
 
   return (
-    <AccessContent>
-      <Layout
-        horizontalAlign="start"
-        verticalAlign="start"
-        style={{
-          margin: "10px 20px",
-        }}
-      >
-        <Header title="Partie privée"></Header>
+    <Layout
+      horizontalAlign="start"
+      verticalAlign="start"
+      style={{
+        margin: "10px 20px",
+      }}
+    >
+      <Header title="Partie privée"></Header>
 
-        <div className="joinPrivateRoom">
-          <PrimaryInput
-            onChange={(e) => {}}
-            type="text"
-            placeholder="Code de la partie ..."
-            style={{
-              width: "100%",
-            }}
-          />
-          <PrimaryButton
-            value="REJOINDRE"
-            style={{
-              marginLeft: "1vw",
-            }}
-            onClick={() => {}}
-          />
-        </div>
-
-        <div className="createPrivateRoom">
-          <PrimaryButton
-            value="CRÉER UNE PARTIE PRIVÉE"
-            style={{
-              width: "100%",
-            }}
-            onClick={createPrivateParty}
-          />
-        </div>
-
-        <Header
-          title="Parties publiques"
+      <div className="joinPrivateRoom">
+        <PrimaryInput
+          onChange={(e) => {}}
+          type="text"
+          placeholder="Code de la partie ..."
           style={{
-            marginTop: "2vh",
+            width: "100%",
           }}
-        ></Header>
-        {server?.parties?.length ? (
-          <div className="partiesContainer">
-            {server.parties.map((party, index) => {
-              return <PartyCell key={index} party={party} index={index} />;
-            })}
-          </div>
-        ) : (
-          <div>Il n'y a actuellement aucunes parties publiques</div>
-        )}
-      </Layout>
-    </AccessContent>
+        />
+        <PrimaryButton
+          value="REJOINDRE"
+          style={{
+            marginLeft: "1vw",
+          }}
+          onClick={() => {}}
+        />
+      </div>
+
+      <div className="createPrivateRoom">
+        <PrimaryButton
+          value="CRÉER UNE PARTIE PRIVÉE"
+          style={{
+            width: "100%",
+          }}
+          onClick={createPrivateParty}
+        />
+      </div>
+
+      <Header
+        title="Parties publiques"
+        style={{
+          marginTop: "2vh",
+        }}
+      ></Header>
+      {server?.parties?.length ? (
+        <div className="partiesContainer">
+          {server.parties.map((party, index) => {
+            return <PartyCell key={index} party={party} index={index} />;
+          })}
+        </div>
+      ) : (
+        <div>Il n'y a actuellement aucunes parties publiques</div>
+      )}
+    </Layout>
   );
 };

@@ -7,7 +7,7 @@ import { connect, resetWs } from "./redux/slices/ws.js";
 import { SocketContext } from "./context/ws";
 import { v4 as uuidv4 } from "uuid";
 import { login, refresh, resetUser } from "./redux/slices/user.js";
-import { resetParty } from "./redux/slices/party.js";
+import { resetParty, refreshParty } from "./redux/slices/party.js";
 import {
   resetServer,
   updateParties,
@@ -65,6 +65,12 @@ const WebSockets = () => {
       dispatch(updateParties({ parties }));
     });
     /**
+     * Update party's data
+     */
+    socket.on("updateParty", ({ party }) => {
+      dispatch(refreshParty({ party }));
+    });
+    /**
      * Disconnect
      */
     socket.on("disconnect", () => {
@@ -89,6 +95,11 @@ const WebSockets = () => {
     }
   }, [ws]);
 
+  const ALLOWED_PATH = ["/r/"];
+  let path = window.location.pathname;
+
+  let isPathAllowed = ALLOWED_PATH.map((p) => path.includes(p)).includes(true);
+
   useEffect(() => {
     /**
      * If party, go to party's room
@@ -100,12 +111,12 @@ const WebSockets = () => {
        * If user, go to lobby
        */
       navigate("/lobby");
-    } else if (state.ws.uuid) {
+    } else if (state.ws.uuid && !isPathAllowed) {
       /**
        * If ws uuid, go to login
        */
       navigate("/login");
-    } else {
+    } else if (!isPathAllowed) {
       /**
        * Else, go to /
        */

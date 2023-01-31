@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { SocketContext } from "../context/ws";
 import { useDispatch, useSelector } from "react-redux";
@@ -5,12 +6,16 @@ import { login } from "../redux/slices/user";
 import { PrimaryButton, PrimaryInput } from "../../components/buttons/index";
 import logo from "../assets/images/logo.png";
 import { Layout } from "../../components/layout";
+import { createParty } from "../redux/slices/party";
 
-export const Login = () => {
+export const JoinPage = () => {
+  let { id } = useParams();
   const [pseudo, setPseudo] = useState("");
   const socket = useContext(SocketContext);
   const uuid = useSelector((state) => state.ws.uuid);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <div
@@ -48,17 +53,22 @@ export const Login = () => {
             }}
           />
           <PrimaryButton
-            value="JOUER"
+            value="REJOINDRE"
             onClick={() => {
               if (!!pseudo) {
                 socket.emit(
-                  "login",
+                  "joinRoom",
                   {
                     uuid: uuid,
                     pseudo: pseudo,
+                    roomUUID: id,
                   },
-                  ({ user }) => {
-                    dispatch(login({ user: user }));
+                  (ack) => {
+                    if (!ack.error) {
+                      dispatch(login({ user: ack.user }));
+                      dispatch(createParty({ party: ack.party }));
+                      navigate("/waiting");
+                    }
                   }
                 );
               }

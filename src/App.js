@@ -4,10 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login } from "./app/pages/login";
 import { SocketContext, socket } from "./app/context/ws";
 import WebSockets from "./app/ws";
-import { AccessContent } from "./app/pages/AccessContent";
 import { Lobby } from "./app/pages/lobby";
 import { Waiting } from "./app/pages/waiting";
 import logo from "./app/assets/images/logo.png";
+import { JoinPage } from "./app/pages/join";
 const Home = () => {
   return (
     <section>
@@ -44,6 +44,7 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/lobby" element={<Lobby />} />
           <Route exact path="/waiting" element={<Waiting />} />
+          <Route exact path="/r/:id" element={<JoinPage />} />
         </Routes>
       </SocketContext.Provider>
     </BrowserRouter>

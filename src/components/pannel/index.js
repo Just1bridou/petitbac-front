@@ -2,7 +2,7 @@ import "./style.css";
 
 import logo from "../../app/assets/images/logo.png";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import lod_ from "lodash";
 import { SocketContext } from "../../app/context/ws";
 
@@ -93,6 +93,8 @@ const WaitingPannel = () => {
 
 export const Pannel = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { onlineUsers } = useSelector((state) => state.server);
   const { pathname } = useLocation();
   const { ws, party } = useSelector((state) => state);
@@ -169,6 +171,7 @@ export const Pannel = () => {
                 dispatch(resetParty());
                 dispatch(resetServer());
                 socket.emit("disconnected", { uuid: ws.uuid });
+                navigate("/");
               }}
             >
               <FontAwesomeIcon icon="right-from-bracket" />
