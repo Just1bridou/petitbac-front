@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createParty } from "../redux/slices/party";
 import { Layout } from "../../components/layout";
 import Header from "../../components/header";
+import { SpecialButton } from "../../components/buttons";
 
 export const Waiting = () => {
   const inputRef = useRef(null);
@@ -22,7 +23,19 @@ export const Waiting = () => {
           margin: "10px 20px",
         }}
       >
-        <Header title="Partie privée"></Header>
+        <Header
+          title="Partie privée"
+          attributes={
+            <SpecialButton
+              value="Copier le lien d'invitation"
+              style={{
+                width: "100%",
+                fontSize: "20px",
+              }}
+              onClick={() => {}}
+            />
+          }
+        ></Header>
       </Layout>
     </AccessContent>
   );

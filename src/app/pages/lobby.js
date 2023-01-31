@@ -7,6 +7,52 @@ import { Layout } from "../../components/layout";
 import Header from "../../components/header";
 import { PrimaryButton, PrimaryInput } from "../../components/buttons";
 import "./lobby.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { Tooltip } from "@mui/material";
+
+const PartyCell = ({ party }) => {
+  return (
+    <div className="partyContainer">
+      <div className="partyHeader">
+        <Tooltip placement="top" title={party.uuid}>
+          <h4 className="partyTitle">{party.uuid}</h4>
+        </Tooltip>
+        <Tooltip
+          placement="right"
+          title={
+            <>
+              <ul>
+                {party.users.map((user, index) => {
+                  return <li key={index}>{user.pseudo}</li>;
+                })}
+              </ul>
+            </>
+          }
+        >
+          <div className="partyUsers">
+            <FontAwesomeIcon icon={faUser} />
+            <span className="partyUserCount">{party.users.length}</span>
+          </div>
+        </Tooltip>
+      </div>
+      <Tooltip
+        placement="right"
+        title={
+          <>
+            <ul>
+              {party.words.map((word, index) => {
+                return <li key={index}>{word}</li>;
+              })}
+            </ul>
+          </>
+        }
+      >
+        <div className="partyThemes">{`${party.words.length} Thèmes`}</div>
+      </Tooltip>
+    </div>
+  );
+};
 
 export const Lobby = () => {
   const socket = useContext(SocketContext);
@@ -65,8 +111,12 @@ export const Lobby = () => {
             marginTop: "2vh",
           }}
         ></Header>
-        {server.parties.length ? (
-          <>Parties : {server.parties.length}</>
+        {server?.parties?.length ? (
+          <div className="partiesContainer">
+            {server.parties.map((party, index) => {
+              return <PartyCell key={index} party={party} index={index} />;
+            })}
+          </div>
         ) : (
           <div>Il n'y a actuellement aucunes parties publiques</div>
         )}

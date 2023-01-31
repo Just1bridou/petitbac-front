@@ -13,7 +13,7 @@ export const Layout = ({
         style={{
           ...style,
           flex: "3",
-          height: "100vh",
+          // height: "100vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: verticalAlign ?? "center",

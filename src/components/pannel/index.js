@@ -14,56 +14,20 @@ import { resetServer } from "../../app/redux/slices/server.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faRightFromBracket, faCrown } from "@fortawesome/free-solid-svg-icons";
 import { IconButton, Tooltip } from "@mui/material";
 import { useContext } from "react";
+import { SpecialButton } from "../buttons";
 library.add(faRightFromBracket);
 
-const UserBox = ({ user }) => {
+const UserBox = ({ user, icon }) => {
   return (
     <Tooltip placement="top" title={user.pseudo}>
-      <div
-        style={{
-          width: "80%",
-          backgroundColor: "#D9D9D9",
-          borderRadius: "20px",
-          padding: "1.5vh 1vw",
-          fontSize: "20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-      >
-        <div
-          style={{
-            width: "5vh",
-            height: "5vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "20px",
-            fontWeight: "bold",
-            color: "rgba(217, 217, 217, 1)",
-            backgroundColor: "rgba(1, 22, 56, 1)",
-            borderRadius: "100px",
-          }}
-        >
-          {user?.pseudo[0]?.toUpperCase()}
-        </div>
-        <div
-          style={{
-            marginLeft: "1vw",
-            fontSize: "25px",
-            fontWeight: "bold",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            width: "13vw",
-            height: "1.2em",
-            whiteSpace: "nowrap",
-            textAlign: "left",
-          }}
-        >
-          {user.pseudo}
+      <div className="userBox">
+        <div className="userBoxAvatar">{user?.pseudo[0]?.toUpperCase()}</div>
+        <div className="userBoxNameContainer">
+          <div className="userBoxName">{user.pseudo}</div>
+          {icon}
         </div>
       </div>
     </Tooltip>
@@ -73,14 +37,65 @@ const UserBox = ({ user }) => {
 const LobbyPannel = () => {
   const { user } = useSelector((state) => state);
   if (lod_.isEmpty(user)) return null;
-  return <UserBox user={user} />;
+
+  return (
+    <div className="multiColumn">
+      <UserBox user={user} />
+    </div>
+  );
+};
+
+const WaitingPannel = () => {
+  const { party } = useSelector((state) => state);
+  const actualUser = useSelector((state) => state.user);
+  if (lod_.isEmpty(party)) return null;
+
+  return (
+    <div className="multiColumn">
+      <div className="columnDivider">
+        <div>
+          {party.users.map((user, index) => {
+            let icon = null;
+
+            if (actualUser.admin) {
+              icon = (
+                <Tooltip placement="left" title="Exclure">
+                  <IconButton size="small" onClick={() => {}}>
+                    <FontAwesomeIcon icon="right-from-bracket" />
+                  </IconButton>
+                </Tooltip>
+              );
+            }
+
+            if (user.admin) {
+              icon = (
+                <Tooltip placement="left" title="Administrateur">
+                  <FontAwesomeIcon icon={faCrown} />
+                </Tooltip>
+              );
+            }
+
+            return <UserBox key={index} user={user} icon={icon} />;
+          })}
+        </div>
+        <SpecialButton
+          value="Prêt"
+          style={{
+            width: "100%",
+            fontSize: "20px",
+          }}
+          onClick={() => {}}
+        />
+      </div>
+    </div>
+  );
 };
 
 export const Pannel = () => {
   const dispatch = useDispatch();
   const { onlineUsers } = useSelector((state) => state.server);
   const { pathname } = useLocation();
-  const { ws } = useSelector((state) => state);
+  const { ws, party } = useSelector((state) => state);
 
   const socket = useContext(SocketContext);
 
@@ -88,8 +103,19 @@ export const Pannel = () => {
     switch (pathname) {
       case "/lobby":
         return <LobbyPannel />;
+      case "/waiting":
+        return <WaitingPannel />;
       default:
         return null;
+    }
+  }
+
+  function bottomPannel() {
+    switch (pathname) {
+      case "/waiting":
+        return `${party?.users?.length} Joueurs`;
+      default:
+        return `${onlineUsers} Joueurs en ligne`;
     }
   }
 
@@ -101,6 +127,8 @@ export const Pannel = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          height: "100%",
+          marginBottom: "5px",
         }}
       >
         <img
@@ -124,7 +152,7 @@ export const Pannel = () => {
         }}
       >
         <div className="divider"></div>
-        <div className="onlineUsers">{`${onlineUsers} Joueurs en ligne`}</div>
+        <div className="onlineUsers">{bottomPannel()}</div>
         <div
           style={{
             position: "absolute",

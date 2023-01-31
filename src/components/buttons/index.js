@@ -28,3 +28,18 @@ export const PrimaryButton = ({ value, onClick, ...rest }) => {
     </button>
   );
 };
+
+export const SpecialButton = ({ value, onClick, ...rest }) => {
+  const [play] = useSound(pop);
+
+  function handleClick() {
+    play();
+    onClick();
+  }
+
+  return (
+    <button onClick={handleClick} className="button special-button" {...rest}>
+      {value}
+    </button>
+  );
+};
