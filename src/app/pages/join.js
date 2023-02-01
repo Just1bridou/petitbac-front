@@ -67,6 +67,7 @@ export const JoinPage = () => {
                     if (!ack.error) {
                       dispatch(login({ user: ack.user }));
                       dispatch(createParty({ party: ack.party }));
+                      socket.emit("saveUser", { uuid: uuid });
                       navigate("/waiting");
                     }
                   }

@@ -1,0 +1,24 @@
+.switchCard {
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.switchCard:hover {
+  filter: brightness(0.8);
+}
+
+.switchCardHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switchCardTitle {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
