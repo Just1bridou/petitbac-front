@@ -1,4 +1,4 @@
-.switchCard {
+.switchMultiple {
   background-color: #d9d9d9;
   border-radius: 10px;
   padding: 10px;
@@ -6,18 +6,18 @@
   cursor: pointer;
 }
 
-.switchCard:hover {
+.switchMultiple:hover {
   filter: brightness(0.8);
 }
 
-.switchCardHeader {
+.switchMultipleHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
 
-.switchCardTitle {
+.switchMultipleTitle {
   font-size: 20px;
   font-weight: 900;
   text-transform: uppercase;

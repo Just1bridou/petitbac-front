@@ -1,27 +1,27 @@
 import "./style.css";
 
-const CustomCard = ({ title, description, onClick, ...rest }) => {
+const CustomMultiple = ({ title, description, onClick, ...rest }) => {
   return (
-    <div className="switchCard" onClick={onClick} {...rest}>
-      <div className="switchCardHeader">
-        <div className="switchCardTitle">{title}</div>
+    <div className="switchMultiple" onClick={onClick} {...rest}>
+      <div className="switchMultipleHeader">
+        <div className="switchMultipleTitle">{title}</div>
       </div>
 
-      <div className="switchCardBody">
-        <div className="switchCardDescription">{description}</div>
+      <div className="switchMultipleBody">
+        <div className="switchMultipleDescription">{description}</div>
       </div>
     </div>
   );
 };
 
-export const MultipleSwitch = ({ items, selected }) => {
+export const MultipleSwitch = ({ items, selected, onClick }) => {
   return items.map((item, index) => {
     return (
-      <CustomCard
+      <CustomMultiple
         key={index}
         title={item.title}
         description={item.description}
-        onClick={() => console.log(item.code)}
+        onClick={() => onClick(item.code)}
         style={{
           backgroundColor: selected === item.code ? "#EEC643" : "",
         }}

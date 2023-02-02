@@ -24,7 +24,6 @@ const WebSockets = () => {
 
   function socketConnected() {
     let userUUID = uuidv4();
-    socket.uuid = userUUID;
     dispatch(connect(userUUID));
     /**
      * Send the uuid to the server
@@ -101,6 +100,9 @@ const WebSockets = () => {
   let isPathAllowed = ALLOWED_PATH.map((p) => path.includes(p)).includes(true);
 
   useEffect(() => {
+    if (isPathAllowed) {
+      initMainThread();
+    }
     /**
      * If party, go to party's room
      */

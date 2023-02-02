@@ -1,0 +1,43 @@
+.roundsInput {
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.roundsInputHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roundsInputTitle {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.roundsInputDescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-self: start;
+}
+
+.roundsInputItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  background-color: #eec643;
+  border-radius: 5px;
+  width: 5vw;
+  height: 5vw;
+  color: #011638;
+  font-weight: bold;
+  border: none;
+  text-align: center;
+  font-size: 18px;
+}
