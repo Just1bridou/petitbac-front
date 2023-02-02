@@ -20,11 +20,18 @@ import { useContext } from "react";
 import { SpecialButton } from "../buttons";
 library.add(faRightFromBracket);
 
-const UserBox = ({ user, icon }) => {
+const UserBox = ({ user, icon, isReady }) => {
   return (
     <Tooltip placement="top" title={user.pseudo}>
       <div className="userBox">
-        <div className="userBoxAvatar">{user?.pseudo[0]?.toUpperCase()}</div>
+        <div
+          className="userBoxAvatar"
+          style={{
+            backgroundColor: isReady ? "#36a10d" : "",
+          }}
+        >
+          {user?.pseudo[0]?.toUpperCase()}
+        </div>
         <div className="userBoxNameContainer">
           <div className="userBoxName">{user.pseudo}</div>
           {icon}
@@ -46,8 +53,9 @@ const LobbyPannel = () => {
 };
 
 const WaitingPannel = () => {
-  const { party } = useSelector((state) => state);
+  const { party, user } = useSelector((state) => state);
   const actualUser = useSelector((state) => state.user);
+  const socket = useContext(SocketContext);
   if (lod_.isEmpty(party)) return null;
 
   return (
@@ -60,7 +68,15 @@ const WaitingPannel = () => {
             if (actualUser.admin) {
               icon = (
                 <Tooltip placement="left" title="Exclure">
-                  <IconButton size="small" onClick={() => {}}>
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      socket.emit("kickUser", {
+                        partyUUID: party.uuid,
+                        uuid: user.uuid,
+                      });
+                    }}
+                  >
                     <FontAwesomeIcon icon="right-from-bracket" />
                   </IconButton>
                 </Tooltip>
@@ -75,16 +91,32 @@ const WaitingPannel = () => {
               );
             }
 
-            return <UserBox key={index} user={user} icon={icon} />;
+            return (
+              <UserBox
+                key={index}
+                user={user}
+                icon={icon}
+                isReady={user.ready}
+              />
+            );
           })}
         </div>
         <SpecialButton
-          value="Prêt"
+          value={
+            party.users.find((u) => u.uuid === user.uuid).ready
+              ? "Annuler"
+              : "Prêt"
+          }
           style={{
             width: "100%",
             fontSize: "20px",
           }}
-          onClick={() => {}}
+          onClick={() => {
+            socket.emit("readyUser", {
+              partyUUID: party.uuid,
+              uuid: user.uuid,
+            });
+          }}
         />
       </div>
     </div>

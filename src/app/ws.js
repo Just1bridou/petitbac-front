@@ -70,6 +70,12 @@ const WebSockets = () => {
       dispatch(refreshParty({ party }));
     });
     /**
+     * When user is kicked from the party
+     */
+    socket.on("kickParty", () => {
+      dispatch(resetParty());
+    });
+    /**
      * Disconnect
      */
     socket.on("disconnect", () => {

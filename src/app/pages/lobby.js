@@ -9,6 +9,7 @@ import "./lobby.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "@mui/material";
+import Flag from "react-world-flags";
 
 const PartyCell = ({ party }) => {
   return (
@@ -17,6 +18,14 @@ const PartyCell = ({ party }) => {
         <Tooltip placement="top" title={party.uuid}>
           <h4 className="partyTitle">{party.uuid}</h4>
         </Tooltip>
+        <Flag
+          code={party.language}
+          style={{
+            height: "1.1em",
+            marginRight: "1vw",
+            borderRadius: "3px",
+          }}
+        />
         <Tooltip
           placement="right"
           title={

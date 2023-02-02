@@ -1,0 +1,50 @@
+.flagsCard {
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+.flagsCardHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flagsCardTitle {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.flagsCardDescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-self: start;
+  margin-top: 10px;
+}
+
+.flagsCardItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  background-color: #011638;
+  border-radius: 5px;
+  width: 5vw;
+  height: 5vw;
+  color: #eef0f2;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.flagsCardItem:hover {
+  filter: brightness(0.8);
+}
+
+.flag {
+  cursor: pointer;
+}

@@ -13,6 +13,7 @@ import { SwitchCard } from "../../components/switchCard";
 import { MultipleSwitch } from "../../components/multipleSwitch";
 import { SwitchTimer } from "../../components/switchTimer";
 import { RoundsInput } from "../../components/roundsInput";
+import { FlagsCard } from "../../components/flagsCard";
 
 const ActionIconButton = ({ icon, onClick }) => {
   return (
@@ -157,6 +158,17 @@ export const Waiting = () => {
               socket.emit("changePartyRounds", {
                 uuid: party.uuid,
                 rounds,
+              });
+            }}
+          />
+          <FlagsCard
+            title="Langage"
+            value={party.language}
+            setValue={(flag) => {
+              if (!user.admin) return;
+              socket.emit("changePartyLanguage", {
+                uuid: party.uuid,
+                language: flag,
               });
             }}
           />
