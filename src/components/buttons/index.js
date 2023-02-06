@@ -2,9 +2,25 @@ import "./buttons.css";
 import useSound from "use-sound";
 import pop from "../../app/assets/sounds/pop.mp3";
 
-export const PrimaryInput = ({ placeholder, value, onChange, ...rest }) => {
+export const PrimaryInput = ({
+  placeholder,
+  value,
+  onChange,
+  onKeyPress,
+  onEnterPress,
+  ...rest
+}) => {
   return (
     <input
+      onKeyDown={(event) => {
+        if (onEnterPress && event.key === "Enter") {
+          onEnterPress();
+        } else {
+          if (onKeyPress) {
+            onKeyPress(event);
+          }
+        }
+      }}
       onChange={onChange}
       value={value}
       placeholder={placeholder}

@@ -18,6 +18,7 @@
   justify-content: space-between;
   width: 100%;
   flex-wrap: wrap;
+  cursor: pointer;
 }
 
 .partyContainer {

@@ -1,0 +1,53 @@
+.containerOpenChat {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+.buttonOpenChat {
+  width: 50px;
+  height: 50px;
+  color: black;
+  font-size: 30px;
+  text-align: center;
+}
+
+.chat {
+  width: 30vw !important;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chatFeed {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.chatMessage {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: #0d21a13f;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.selfMessage {
+  text-align: right;
+  background-color: #eec64344;
+}
+
+.chatMessagePseudo {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.chatMessageMessage {
+  font-size: 1em;
+}

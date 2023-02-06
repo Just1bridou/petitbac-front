@@ -37,7 +37,9 @@ const WebSockets = () => {
      * When socket is connected, store random uuid linked to the user, used for requests
      */
     socket.on("connect", () => {
-      socketConnected();
+      if (!ws.uuid) {
+        socketConnected();
+      }
     });
     /**
      * Used to change the page
@@ -97,6 +99,7 @@ const WebSockets = () => {
        * If user reload the page, save new socket connection to the server
        */
       socket.emit("saveUser", { uuid: ws.uuid });
+      initMainThread();
     }
   }, [ws]);
 
@@ -108,6 +111,7 @@ const WebSockets = () => {
   useEffect(() => {
     if (isPathAllowed) {
       initMainThread();
+      return;
     }
     /**
      * If party, go to party's room
@@ -119,17 +123,18 @@ const WebSockets = () => {
        * If user, go to lobby
        */
       navigate("/lobby");
-    } else if (state.ws.uuid && !isPathAllowed) {
+    } else if (state.ws.uuid) {
       /**
        * If ws uuid, go to login
        */
       navigate("/login");
-    } else if (!isPathAllowed) {
+    } else {
       /**
        * Else, go to /
        */
       navigate("/");
       if (!ws.uuid) {
+        console.log("second");
         socketConnected();
       }
     }

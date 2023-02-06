@@ -10,10 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "@mui/material";
 import Flag from "react-world-flags";
+import { login } from "../redux/slices/user";
+import { useNavigate } from "react-router-dom";
 
-const PartyCell = ({ party }) => {
+const PartyCell = ({ party, onClick }) => {
   return (
-    <div className="partyContainer">
+    <div className="partyContainer" onClick={onClick}>
       <div className="partyHeader">
         <Tooltip placement="top" title={party.uuid}>
           <h4 className="partyTitle">{party.uuid}</h4>
@@ -65,8 +67,9 @@ const PartyCell = ({ party }) => {
 export const Lobby = () => {
   const socket = useContext(SocketContext);
   const uuid = useSelector((state) => state.ws.uuid);
-  const { server } = useSelector((state) => state);
+  const { server, user } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const createPrivateParty = () => {
     socket.emit("createPrivateParty", { uuid: uuid }, ({ party }) => {
@@ -121,7 +124,31 @@ export const Lobby = () => {
       {server?.parties?.length ? (
         <div className="partiesContainer">
           {server.parties.map((party, index) => {
-            return <PartyCell key={index} party={party} index={index} />;
+            return (
+              <PartyCell
+                key={index}
+                party={party}
+                index={index}
+                onClick={() => {
+                  socket.emit(
+                    "joinRoom",
+                    {
+                      uuid: uuid,
+                      pseudo: user.pseudo,
+                      roomUUID: party.uuid,
+                    },
+                    (ack) => {
+                      if (!ack.error) {
+                        dispatch(login({ user: ack.user }));
+                        dispatch(createParty({ party: ack.party }));
+                        socket.emit("saveUser", { uuid: uuid });
+                        navigate("/waiting");
+                      }
+                    }
+                  );
+                }}
+              />
+            );
           })}
         </div>
       ) : (

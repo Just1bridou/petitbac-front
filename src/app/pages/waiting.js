@@ -14,6 +14,8 @@ import { MultipleSwitch } from "../../components/multipleSwitch";
 import { SwitchTimer } from "../../components/switchTimer";
 import { RoundsInput } from "../../components/roundsInput";
 import { FlagsCard } from "../../components/flagsCard";
+import { Chat, ChatButton } from "../../components/chat";
+import { IconButton } from "@mui/material";
 
 const ActionIconButton = ({ icon, onClick }) => {
   return (
@@ -22,15 +24,27 @@ const ActionIconButton = ({ icon, onClick }) => {
     </div>
   );
 };
+
 export const Waiting = () => {
   const { party, user } = useSelector((state) => state);
   const socket = useContext(SocketContext);
   const [inputWord, setInputWord] = useState("");
+  const [openChat, setOpenChat] = useState(false);
 
   const copyActualUrlToClipboard = () => {
     const url = window.location.origin + "/r/" + party.uuid;
     navigator.clipboard.writeText(url);
   };
+
+  function addNewWord() {
+    if (!inputWord.trim()) return;
+    if (!user.admin) return;
+    socket.emit("addPartyWord", {
+      uuid: party.uuid,
+      newWord: inputWord,
+    });
+    setInputWord("");
+  }
 
   return (
     <Layout
@@ -40,6 +54,24 @@ export const Waiting = () => {
         margin: "10px 20px",
       }}
     >
+      <Chat
+        openChat={openChat}
+        closeChat={() => setOpenChat(false)}
+        onClick={() => setOpenChat(true)}
+        style={{
+          position: "fixed",
+          top: "10px",
+          right: "10px",
+        }}
+      />
+      {/* <ChatButton
+        onClick={() => setOpenChat(true)}
+        style={{
+          position: "fixed",
+          top: "10px",
+          right: "10px",
+        }}
+      /> */}
       <Header
         title="Partie privée"
         attributes={
@@ -57,59 +89,64 @@ export const Waiting = () => {
       <div className="waitingContainer">
         <div className="themesList">
           <Title title="Liste des thèmes" size="medium" />
-          <div className="themesEditor">
-            <div className="themesDisplay">
-              {party?.words?.map((word, index) => {
-                return (
-                  <div key={index} className="themeLine">
-                    <div className="theme">{word}</div>
-                    {party?.words?.length > 1 && (
-                      <ActionIconButton
-                        icon={faClose}
-                        onClick={() => {
-                          if (!user.admin) return;
-                          socket.emit("removePartyWord", {
-                            uuid: party.uuid,
-                            word,
-                          });
-                        }}
-                      />
-                    )}
+          <>
+            {party?.mode === "classic" ? (
+              <div className="themesEditor">
+                <div className="themesDisplay">
+                  {party?.words?.map((word, index) => {
+                    return (
+                      <div key={index} className="themeLine">
+                        <div className="theme">{word}</div>
+                        {party?.words?.length > 1 && (
+                          <ActionIconButton
+                            icon={faClose}
+                            onClick={() => {
+                              addNewWord();
+                            }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                {user.admin && (
+                  <div className="themeLine" style={{ margin: 0 }}>
+                    <PrimaryInput
+                      value={inputWord}
+                      onChange={(e) => {
+                        setInputWord(e.target.value);
+                      }}
+                      type="text"
+                      placeholder="Ajouter un theme ..."
+                      style={{
+                        fontSize: "20px",
+                        width: "100%",
+                        backgroundColor: "#d9d9d9",
+                        marginRight: "5px",
+                      }}
+                      onEnterPress={() => {
+                        addNewWord();
+                      }}
+                    />
+                    <ActionIconButton
+                      icon={faPaperPlane}
+                      onClick={() => {
+                        if (!inputWord.trim()) return;
+                        if (!user.admin) return;
+                        socket.emit("addPartyWord", {
+                          uuid: party.uuid,
+                          newWord: inputWord,
+                        });
+                        setInputWord("");
+                      }}
+                    />
                   </div>
-                );
-              })}
-            </div>
-            {user.admin && (
-              <div className="themeLine" style={{ margin: 0 }}>
-                <PrimaryInput
-                  value={inputWord}
-                  onChange={(e) => {
-                    setInputWord(e.target.value);
-                  }}
-                  type="text"
-                  placeholder="Ajouter un theme ..."
-                  style={{
-                    fontSize: "20px",
-                    width: "100%",
-                    backgroundColor: "#d9d9d9",
-                    marginRight: "5px",
-                  }}
-                />
-                <ActionIconButton
-                  icon={faPaperPlane}
-                  onClick={() => {
-                    if (!inputWord.trim()) return;
-                    if (!user.admin) return;
-                    socket.emit("addPartyWord", {
-                      uuid: party.uuid,
-                      newWord: inputWord,
-                    });
-                    setInputWord("");
-                  }}
-                />
+                )}
               </div>
+            ) : (
+              <div className="displayMode">Mode de jeu aléatoire</div>
             )}
-          </div>
+          </>
         </div>
         <div className="optionList">
           <Title title="Mode de jeu" size="medium" />

@@ -15,8 +15,12 @@ export const partySlice = createSlice({
     resetParty: (state) => {
       return initialState;
     },
+    refreshPartyChat: (state, payload) => {
+      state.chat = payload.payload.chat;
+    },
   },
 });
 
-export const { createParty, refreshParty, resetParty } = partySlice.actions;
+export const { createParty, refreshParty, resetParty, refreshPartyChat } =
+  partySlice.actions;
 export default partySlice.reducer;
