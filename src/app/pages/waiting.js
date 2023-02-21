@@ -1,8 +1,7 @@
 import "./waiting.css";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { SocketContext } from "../context/ws";
-import { useDispatch, useSelector } from "react-redux";
-import { createParty } from "../redux/slices/party";
+import { useSelector } from "react-redux";
 import { Layout } from "../../components/layout";
 import Header from "../../components/header";
 import { PrimaryInput, SpecialButton } from "../../components/buttons";
@@ -14,8 +13,7 @@ import { MultipleSwitch } from "../../components/multipleSwitch";
 import { SwitchTimer } from "../../components/switchTimer";
 import { RoundsInput } from "../../components/roundsInput";
 import { FlagsCard } from "../../components/flagsCard";
-import { Chat, ChatButton } from "../../components/chat";
-import { IconButton } from "@mui/material";
+import { Chat } from "../../components/chat";
 
 const ActionIconButton = ({ icon, onClick }) => {
   return (

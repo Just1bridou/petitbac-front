@@ -2,7 +2,7 @@ import "./style.css";
 
 import logo from "../../app/assets/images/logo.png";
 import { useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import lod_ from "lodash";
 import { SocketContext } from "../../app/context/ws";
 
@@ -20,7 +20,7 @@ import { useContext } from "react";
 import { SpecialButton } from "../buttons";
 library.add(faRightFromBracket);
 
-const UserBox = ({ user, icon, isReady }) => {
+const UserBox = ({ user, icon, isReady, secondLine = null }) => {
   return (
     <Tooltip placement="top" title={user.pseudo}>
       <div className="userBox">
@@ -32,9 +32,21 @@ const UserBox = ({ user, icon, isReady }) => {
         >
           {user?.pseudo[0]?.toUpperCase()}
         </div>
-        <div className="userBoxNameContainer">
-          <div className="userBoxName">{user.pseudo}</div>
-          {icon}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+
+            marginLeft: "1vw",
+          }}
+        >
+          <div className="userBoxNameContainer">
+            <div className="userBoxName">{user.pseudo}</div>
+            {icon}
+          </div>
+          {secondLine}
         </div>
       </div>
     </Tooltip>
@@ -62,7 +74,7 @@ const WaitingPannel = () => {
     <div className="multiColumn">
       <div className="columnDivider">
         <div>
-          {party.users.map((user, index) => {
+          {party.users?.map((user, index) => {
             let icon = null;
 
             if (actualUser.admin) {
@@ -103,7 +115,7 @@ const WaitingPannel = () => {
         </div>
         <SpecialButton
           value={
-            party.users.find((u) => u.uuid === user.uuid).ready
+            party.users?.find((u) => u.uuid === user.uuid).ready
               ? "Annuler"
               : "Prêt"
           }
@@ -115,6 +127,88 @@ const WaitingPannel = () => {
             socket.emit("readyUser", {
               partyUUID: party.uuid,
               uuid: user.uuid,
+            });
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+const GamePannel = () => {
+  const { party } = useSelector((state) => state);
+  const socket = useContext(SocketContext);
+  if (lod_.isEmpty(party)) return null;
+
+  return (
+    <div className="multiColumn">
+      <div className="columnDivider">
+        <div>
+          {party.users?.map((user, index) => {
+            return (
+              <UserBox
+                key={index}
+                user={user}
+                secondLine={
+                  <div className="userScore">
+                    {party.score[user.uuid]?.score ?? 0}
+                    <span className="pts">pts</span>
+                  </div>
+                }
+              />
+            );
+          })}
+        </div>
+        <SpecialButton
+          value="STOP"
+          style={{
+            width: "100%",
+            fontSize: "20px",
+          }}
+          onClick={() => {
+            socket.emit("stopGame", {
+              uuid: party.uuid,
+            });
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+const ResultsPannel = () => {
+  const { party } = useSelector((state) => state);
+  const socket = useContext(SocketContext);
+  if (lod_.isEmpty(party)) return null;
+
+  return (
+    <div className="multiColumn">
+      <div className="columnDivider">
+        <div>
+          {party.users?.map((user, index) => {
+            return (
+              <UserBox
+                key={index}
+                user={user}
+                secondLine={
+                  <div className="userScore">
+                    {party.score[user.uuid]?.score ?? 0}
+                    <span className="pts">pts</span>
+                  </div>
+                }
+              />
+            );
+          })}
+        </div>
+        <SpecialButton
+          value="Suivant"
+          style={{
+            width: "100%",
+            fontSize: "20px",
+          }}
+          onClick={() => {
+            socket.emit("stopGame", {
+              uuid: party.uuid,
             });
           }}
         />
@@ -139,6 +233,10 @@ export const Pannel = () => {
         return <LobbyPannel />;
       case "/waiting":
         return <WaitingPannel />;
+      case "/game":
+        return <GamePannel />;
+      case "/results":
+        return <ResultsPannel />;
       default:
         return null;
     }
@@ -147,6 +245,8 @@ export const Pannel = () => {
   function bottomPannel() {
     switch (pathname) {
       case "/waiting":
+      case "/game":
+      case "/results":
         return `${party?.users?.length} Joueurs`;
       default:
         return `${onlineUsers} Joueurs en ligne`;

@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { SocketContext } from "../context/ws";
 import { useDispatch, useSelector } from "react-redux";
 import { createParty } from "../redux/slices/party";

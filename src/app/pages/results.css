@@ -1,0 +1,31 @@
+.vote {
+  width: 30px;
+  height: 30px;
+  margin: 2px;
+  border-radius: 5px;
+}
+
+.table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.lineContent {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lineContentHeader {
+  flex: 1;
+}
+
+.lineContentCell {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}

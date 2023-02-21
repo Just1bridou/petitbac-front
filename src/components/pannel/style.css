@@ -62,7 +62,6 @@
 }
 
 .userBoxName {
-  margin-left: 1vw;
   font-size: 25px;
   font-weight: bold;
   text-overflow: ellipsis;
@@ -78,4 +77,19 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+}
+
+.pts {
+  color: #0d21a1;
+  font-weight: 900;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-left: 0.5vw;
+}
+
+.userScore {
+  color: #0d21a1;
+  font-weight: 900;
+  font-size: 20px;
+  text-transform: uppercase;
 }

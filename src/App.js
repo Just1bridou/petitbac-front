@@ -8,6 +8,8 @@ import { Lobby } from "./app/pages/lobby";
 import { Waiting } from "./app/pages/waiting";
 import logo from "./app/assets/images/logo.png";
 import { JoinPage } from "./app/pages/join";
+import { Game } from "./app/pages/game";
+import { Results } from "./app/pages/results";
 const Home = () => {
   return (
     <section>
@@ -44,6 +46,8 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/lobby" element={<Lobby />} />
           <Route exact path="/waiting" element={<Waiting />} />
+          <Route exact path="/game" element={<Game />} />
+          <Route exact path="/results" element={<Results />} />
           <Route exact path="/r/:id" element={<JoinPage />} />
         </Routes>
       </SocketContext.Provider>

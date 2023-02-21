@@ -1,0 +1,63 @@
+.gameAttributesContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.letterContainer,
+.timerContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  padding: 10px 30px;
+  font-size: 20px;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  font-weight: 700;
+  margin-left: 1vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.timer {
+  z-index: 10;
+  color: #141414;
+}
+
+.timerBar {
+  transition: 1s all linear;
+  background-color: #eec643;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.gameContent {
+  width: 100%;
+
+  overflow-y: scroll;
+  max-height: 80vh;
+}
+
+.gameContainer {
+  width: 50vw;
+  margin: auto;
+}
+
+.wordCell {
+  margin-top: 4vh;
+}
+.wordCellCategorie {
+  margin-bottom: 0.5vh;
+  font-size: 25px;
+  font-weight: 700;
+  color: #141414;
+}

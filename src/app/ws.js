@@ -78,6 +78,18 @@ const WebSockets = () => {
       dispatch(resetParty());
     });
     /**
+     * When party start
+     */
+    socket.on("startGame", (party) => {
+      dispatch(refreshParty({ party }));
+    });
+    /**
+     * When party stop
+     */
+    socket.on("viewResults", (party) => {
+      dispatch(refreshParty({ party }));
+    });
+    /**
      * Disconnect
      */
     socket.on("disconnect", () => {
@@ -113,10 +125,20 @@ const WebSockets = () => {
       initMainThread();
       return;
     }
-    /**
-     * If party, go to party's room
-     */
-    if (!lod_.isEmpty(state.party)) {
+    if (!lod_.isEmpty(state.party) && state.party.status === "results") {
+      /**
+       * View party results
+       */
+      navigate("/results");
+    } else if (!lod_.isEmpty(state.party) && state.party.status === "playing") {
+      /**
+       * If party playing, go to party
+       */
+      navigate("/game");
+    } else if (!lod_.isEmpty(state.party)) {
+      /**
+       * If party, go to party's room
+       */
       navigate("/waiting");
     } else if (!lod_.isEmpty(state.user)) {
       /**
@@ -134,7 +156,6 @@ const WebSockets = () => {
        */
       navigate("/");
       if (!ws.uuid) {
-        console.log("second");
         socketConnected();
       }
     }
