@@ -6,6 +6,8 @@ import { Layout } from "../../components/layout";
 import Header from "../../components/header";
 import { Chat } from "../../components/chat";
 import { Tooltip } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook } from "@fortawesome/free-solid-svg-icons";
 
 const LetterContainer = ({ letter }) => {
   return (
@@ -42,23 +44,6 @@ export const Results = () => {
   const socket = useContext(SocketContext);
   const [openChat, setOpenChat] = useState(false);
 
-  const [inputWord, setInputWord] = useState([]);
-
-  const [disabled, setDisabled] = useState(false);
-
-  /**
-   * When party stop
-   */
-  socket.removeListener("stopGame");
-  socket.on("stopGame", () => {
-    setDisabled(true);
-    socket.emit("savePartyWords", {
-      uuid: user.uuid,
-      partyUUID: party.uuid,
-      words: inputWord,
-    });
-  });
-
   return (
     <Layout
       horizontalAlign="start"
@@ -90,9 +75,9 @@ export const Results = () => {
         {party.words?.map((word, index) => {
           return (
             <div key={index}>
-              <h4>{word}</h4>
+              <h4 className="categorieTitle">{word}</h4>
               <div className="table">
-                <div className="lineContent">
+                <div className="lineContent tableHeader">
                   <div className="lineContentHeader">Joueur</div>
                   <div className="lineContentHeader">Mot</div>
                   <div className="lineContentHeader">Vote</div>
@@ -104,14 +89,35 @@ export const Results = () => {
                   >
                     Réponses
                   </div>
+                  <div
+                    className="lineContentHeader"
+                    style={{
+                      textAlign: "right",
+                    }}
+                  >
+                    Actions
+                  </div>
                 </div>
                 {party.answers.map((answer, i) => {
                   let userRow = party.users.find((u) => u.uuid === answer.uuid);
                   let actualAnswer = answer.words[index];
 
                   if (!userRow) return null;
+
+                  let voteLessThanFifty =
+                    actualAnswer.votes.filter((v) => v.vote).length <
+                    party.users.length / 2;
+
                   return (
-                    <div className="lineContent" key={i}>
+                    <div
+                      className="lineContent tableBody"
+                      key={i}
+                      style={{
+                        textDecoration: voteLessThanFifty ? "line-through" : "",
+                        textDecorationColor: voteLessThanFifty ? "red" : "",
+                        textDecorationThickness: voteLessThanFifty ? "4px" : "",
+                      }}
+                    >
                       <div className="lineContentCell">{userRow?.pseudo}</div>
                       <div className="lineContentCell">{actualAnswer.word}</div>
                       <div className="lineContentCell">
@@ -154,6 +160,32 @@ export const Results = () => {
                             />
                           );
                         })}
+                      </div>
+                      <div
+                        className="lineContentCell"
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        {actualAnswer.word && (
+                          <a
+                            href={`https://fr.wikipedia.org/wiki/${actualAnswer.word}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              textDecoration: "none",
+                              color: "black",
+                            }}
+                          >
+                            <Tooltip
+                              placement="top"
+                              title={`Voir si "${actualAnswer.word}" existe`}
+                            >
+                              <FontAwesomeIcon icon={faBook} />
+                            </Tooltip>
+                          </a>
+                        )}
                       </div>
                     </div>
                   );

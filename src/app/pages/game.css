@@ -42,7 +42,8 @@
 
 .gameContent {
   width: 100%;
-
+  padding-left: 2vw;
+  padding-right: 2vw;
   overflow-y: scroll;
   max-height: 80vh;
 }

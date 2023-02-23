@@ -1,5 +1,5 @@
 import "./game.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { SocketContext } from "../context/ws";
 import { useSelector } from "react-redux";
 import { Layout } from "../../components/layout";
@@ -43,6 +43,7 @@ export const Game = () => {
    */
   socket.removeListener("stopGame");
   socket.on("stopGame", () => {
+    console.log("stop game !!");
     setDisabled(true);
     socket.emit("savePartyWords", {
       uuid: user.uuid,
@@ -101,8 +102,10 @@ export const Game = () => {
                     color: "#666666",
                     height: "10vh",
                     textTransform: "uppercase",
+                    fontStyle: "normal",
                   }}
                   disabled={disabled}
+                  spellCheck={false}
                 />
               </div>
             );

@@ -1,6 +1,6 @@
 .vote {
-  width: 30px;
-  height: 30px;
+  width: 1.5vw;
+  height: 1.5vw;
   margin: 2px;
   border-radius: 5px;
 }
@@ -28,4 +28,29 @@
   flex: 1;
   display: flex;
   flex-direction: row;
+}
+
+.categorieTitle {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  margin-top: 7vh;
+  text-transform: uppercase;
+}
+
+.tableHeader {
+  color: #d9d9d9;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-top: 5px solid #d9d9d9;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
+
+.tableBody {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
 }

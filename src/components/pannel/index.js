@@ -145,13 +145,16 @@ const GamePannel = () => {
       <div className="columnDivider">
         <div>
           {party.users?.map((user, index) => {
+            let userScore = party.score.find(
+              (score) => score.uuid === user.uuid
+            );
             return (
               <UserBox
                 key={index}
                 user={user}
                 secondLine={
                   <div className="userScore">
-                    {party.score[user.uuid]?.score ?? 0}
+                    {userScore?.score ?? 0}
                     <span className="pts">pts</span>
                   </div>
                 }
@@ -177,7 +180,7 @@ const GamePannel = () => {
 };
 
 const ResultsPannel = () => {
-  const { party } = useSelector((state) => state);
+  const { party, user } = useSelector((state) => state);
   const socket = useContext(SocketContext);
   if (lod_.isEmpty(party)) return null;
 
@@ -186,16 +189,20 @@ const ResultsPannel = () => {
       <div className="columnDivider">
         <div>
           {party.users?.map((user, index) => {
+            let userScore = party.score.find(
+              (score) => (score.uuid === user.uuid)
+            );
             return (
               <UserBox
                 key={index}
                 user={user}
                 secondLine={
                   <div className="userScore">
-                    {party.score[user.uuid]?.score ?? 0}
+                    {userScore?.score ?? 0}
                     <span className="pts">pts</span>
                   </div>
                 }
+                isReady={user.ready}
               />
             );
           })}
@@ -207,8 +214,9 @@ const ResultsPannel = () => {
             fontSize: "20px",
           }}
           onClick={() => {
-            socket.emit("stopGame", {
-              uuid: party.uuid,
+            socket.emit("nextRound", {
+              partyUUID: party.uuid,
+              uuid: user.uuid,
             });
           }}
         />
