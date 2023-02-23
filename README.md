@@ -1,46 +1,99 @@
-# Getting Started with Create React App and Redux
+# Petitbac Front application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+## Run with docker
 
-## Available Scripts
+Add env var :
 
-In the project directory, you can run:
+`REACT_APP_BACK_HOST` : Back host
+`REACT_APP_BACK_PORT` : Back port
+`REACT_APP_FLAGS` : https://countryflagsapi.com/png/ (for the flags)
 
-### `npm start`
+### docker-compose.yml
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Used for deploying app & back
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```yaml
+version: "3.7"
+services:
+  back:
+    container_name: back
+    image: just1bridou/petitbac-back:latest
+    ports:
+      - "8080:8080"
+  front:
+    container_name: front
+    image: just1bridou/petitbac-front:latest
+    depends_on:
+      - back
+    ports:
+      - "3000:3000"
+    environment:
+      # REACT_APP_BACK_HOST: back
+      REACT_APP_BACK_HOST: 91.121.75.14
+      REACT_APP_BACK_PORT: 8080
+      REACT_APP_FLAGS: https://countryflagsapi.com/png/
+```
 
-### `npm test`
+Start app
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`docker compose up -d`
 
-### `npm run build`
+### CI/CD Webhook
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Project is using CI/CD & github's webhook
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### webhook.config
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```json
+[
+  {
+    "id": "[WEBHOOK_ID]",
+    "execute-command": "[PATH/TO/DIR/SCRIPT]/redeploy.sh",
+    "command-working-directory": "[PATH/TO/DIR/SCRIPT]",
+    "parse-parameters-as-json": [
+      {
+        "source": "payload",
+        "name": "payload"
+      }
+    ],
+    "trigger-rule": {
+      "and": [
+        {
+          "match": {
+            "type": "payload-hmac-sha1",
+            "secret": "[GITHUB_SECRET_KEY]",
+            "parameter": {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match": {
+            "type": "value",
+            "parameter": {
+              "source": "payload",
+              "name": "payload.action"
+            },
+            "value": "completed"
+          }
+        }
+      ]
+    }
+  }
+]
+```
 
-### `npm run eject`
+#### service config
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```yml
+[Unit]
+Description=Small server for creating HTTP endpoints (hooks)
+ConditionPathExists=/etc/webhook.conf
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+[Service]
+ExecStart=/usr/bin/webhook -nopanic -hooks /etc/webhook.conf -verbose
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[Install]
+WantedBy=multi-user.target
+```
