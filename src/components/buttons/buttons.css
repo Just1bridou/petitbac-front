@@ -2,14 +2,17 @@
   border-radius: 10px;
   border: none;
   padding: 1vh 3vw;
-  background-color: #eef0f2;
-  font-weight: bold;
-  font-size: 30px;
-  font-style: italic;
+  background: #222249;
+  border-radius: 20px;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 500;
+  color: #d4d5ee;
+  line-clamp: 50px;
 }
 
 .input::-webkit-input-placeholder {
-  color: rgba(20, 20, 20, 0.46);
+  color: #d4d5ee;
 }
 
 .button {
@@ -24,15 +27,16 @@
 }
 
 .primary-button {
-  background: #0d21a1;
+  background: #2d3fdd;
+  border-radius: 20px;
   color: rgba(238, 240, 242, 1);
-  font-weight: bold;
-  font-size: 30px;
+  font-weight: 800;
+  font-size: 25px;
 }
 
 .special-button {
   background: #eec643;
   color: #141414;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 25px;
 }

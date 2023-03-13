@@ -87,7 +87,7 @@ export const Lobby = () => {
     >
       <Header title="Partie privée"></Header>
 
-      <div className="joinPrivateRoom">
+      {/* <div className="joinPrivateRoom">
         <PrimaryInput
           onChange={(e) => {}}
           type="text"
@@ -103,7 +103,7 @@ export const Lobby = () => {
           }}
           onClick={() => {}}
         />
-      </div>
+      </div> */}
 
       <div className="createPrivateRoom">
         <PrimaryButton

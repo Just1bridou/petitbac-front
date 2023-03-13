@@ -10,6 +10,7 @@ import logo from "./app/assets/images/logo.png";
 import { JoinPage } from "./app/pages/join";
 import { Game } from "./app/pages/game";
 import { Results } from "./app/pages/results";
+import { Background } from "./components/Background";
 const Home = () => {
   return (
     <section>
@@ -38,20 +39,22 @@ const Home = () => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <SocketContext.Provider value={socket}>
-        <WebSockets></WebSockets>
-        <Routes>
-          <Route exact path="*" element={<Home />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/lobby" element={<Lobby />} />
-          <Route exact path="/waiting" element={<Waiting />} />
-          <Route exact path="/game" element={<Game />} />
-          <Route exact path="/results" element={<Results />} />
-          <Route exact path="/r/:id" element={<JoinPage />} />
-        </Routes>
-      </SocketContext.Provider>
-    </BrowserRouter>
+    <Background>
+      <BrowserRouter>
+        <SocketContext.Provider value={socket}>
+          <WebSockets></WebSockets>
+          <Routes>
+            <Route exact path="*" element={<Home />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/lobby" element={<Lobby />} />
+            <Route exact path="/waiting" element={<Waiting />} />
+            <Route exact path="/game" element={<Game />} />
+            <Route exact path="/results" element={<Results />} />
+            <Route exact path="/r/:id" element={<JoinPage />} />
+          </Routes>
+        </SocketContext.Provider>
+      </BrowserRouter>
+    </Background>
   );
 }
 

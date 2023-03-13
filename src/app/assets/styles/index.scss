@@ -1,0 +1,31 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway);
+
+// Colors variables
+$backgroundGradient: linear-gradient(
+  111.34deg,
+  #15102d 0%,
+  #100e26 0.01%,
+  #111228 100%
+);
+$menuBackground: linear-gradient(171.51deg, #1e218a 0%, #262054 99.2%);
+$fadePink: linear-gradient(
+  92.85deg,
+  rgba(236, 233, 238, 0.6) 6.55%,
+  rgba(235, 206, 255, 0.6) 96.2%
+);
+$fadeRed: linear-gradient(90.48deg, #821b67 2.19%, #d12e8a 100%);
+$fadeGreen: linear-gradient(124.36deg, #25bf89 0%, #1d3850 100%);
+
+$menuBackgroundBlur: blur(1px);
+
+* {
+  font-family: "Raleway";
+  user-select: none;
+  box-sizing: border-box;
+  outline: none;
+}
+
+body {
+  background: $backgroundGradient;
+  min-height: 100vh;
+}

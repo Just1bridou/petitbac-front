@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 
 import logo from "../../app/assets/images/logo.png";
 import { useSelector } from "react-redux";
@@ -190,7 +190,7 @@ const ResultsPannel = () => {
         <div>
           {party.users?.map((user, index) => {
             let userScore = party.score.find(
-              (score) => (score.uuid === user.uuid)
+              (score) => score.uuid === user.uuid
             );
             return (
               <UserBox
@@ -231,7 +231,7 @@ export const Pannel = () => {
 
   const { onlineUsers } = useSelector((state) => state.server);
   const { pathname } = useLocation();
-  const { ws, party } = useSelector((state) => state);
+  const { ws, party, user } = useSelector((state) => state);
 
   const socket = useContext(SocketContext);
 
@@ -261,8 +261,50 @@ export const Pannel = () => {
     }
   }
 
+  function bottomButton() {
+    switch (pathname) {
+      case "/lobby":
+        return (
+          <Tooltip placement="left" title="Se déconnecter">
+            <IconButton
+              size="small"
+              onClick={() => {
+                dispatch(resetWs());
+                dispatch(resetUser());
+                dispatch(resetParty());
+                dispatch(resetServer());
+                socket.emit("disconnected", { uuid: ws.uuid });
+                navigate("/");
+              }}
+            >
+              <FontAwesomeIcon icon="right-from-bracket" />
+            </IconButton>
+          </Tooltip>
+        );
+      default:
+        return (
+          <Tooltip placement="left" title="Quitter">
+            <IconButton
+              size="small"
+              onClick={() => {
+                socket.emit("userLeaveParty", {
+                  partyUUID: party.uuid,
+                  uuid: user.uuid,
+                });
+                dispatch(resetParty());
+              }}
+            >
+              <FontAwesomeIcon icon="right-from-bracket" />
+            </IconButton>
+          </Tooltip>
+        );
+    }
+  }
+
   return (
     <div className="pannel">
+      <div className="lightOne"></div>
+      <div className="lightTwo"></div>
       <div
         style={{
           width: "100%",
@@ -276,7 +318,7 @@ export const Pannel = () => {
         <img
           style={{
             height: "auto",
-            width: "15vw",
+            width: "10vw",
             contentFit: "contain",
             marginBottom: "4vh",
           }}
@@ -293,7 +335,6 @@ export const Pannel = () => {
           alignItems: "center",
         }}
       >
-        <div className="divider"></div>
         <div className="onlineUsers">{bottomPannel()}</div>
         <div
           style={{
@@ -302,21 +343,7 @@ export const Pannel = () => {
             right: "20px",
           }}
         >
-          <Tooltip placement="left" title="Se déconnecter">
-            <IconButton
-              size="small"
-              onClick={() => {
-                dispatch(resetWs());
-                dispatch(resetUser());
-                dispatch(resetParty());
-                dispatch(resetServer());
-                socket.emit("disconnected", { uuid: ws.uuid });
-                navigate("/");
-              }}
-            >
-              <FontAwesomeIcon icon="right-from-bracket" />
-            </IconButton>
-          </Tooltip>
+          {bottomButton()}
         </div>
       </div>
     </div>

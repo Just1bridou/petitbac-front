@@ -74,12 +74,6 @@
   font-style: italic;
 }
 
-* {
-  font-family: "Source Sans";
-  box-sizing: border-box;
-  outline: none;
-}
-
 body {
   margin: 0;
 }
