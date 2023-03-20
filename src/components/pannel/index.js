@@ -337,6 +337,7 @@ export const Pannel = () => {
       >
         <div className="onlineUsers">{bottomPannel()}</div>
         <div
+        className="buttonOption"
           style={{
             position: "absolute",
             bottom: "15px",
