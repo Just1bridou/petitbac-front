@@ -11,13 +11,15 @@ import { resetWs } from "../../app/redux/slices/ws.js";
 import { resetUser } from "../../app/redux/slices/user.js";
 import { resetParty } from "../../app/redux/slices/party.js";
 import { resetServer } from "../../app/redux/slices/server.js";
+import { Chat as ComponentChat } from "../../components/chat";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faRightFromBracket, faCrown } from "@fortawesome/free-solid-svg-icons";
 import { IconButton, Tooltip } from "@mui/material";
-import { useContext } from "react";
-import { SpecialButton } from "../buttons";
+import { useContext, useState } from "react";
+import { PrimaryButton, SpecialButton } from "../buttons";
+import { Chat, Link } from "@carbon/icons-react";
 library.add(faRightFromBracket);
 
 const UserBox = ({ user, icon, isReady, secondLine = null }) => {
@@ -40,11 +42,12 @@ const UserBox = ({ user, icon, isReady, secondLine = null }) => {
             alignItems: "flex-start",
 
             marginLeft: "1vw",
+            flex: 1,
           }}
         >
           <div className="userBoxNameContainer">
             <div className="userBoxName">{user.pseudo}</div>
-            {icon}
+            <div className="userBoxIcon">{icon}</div>
           </div>
           {secondLine}
         </div>
@@ -65,13 +68,47 @@ const LobbyPannel = () => {
 };
 
 const WaitingPannel = () => {
+  const [openChat, setOpenChat] = useState(false);
   const { party, user } = useSelector((state) => state);
   const actualUser = useSelector((state) => state.user);
   const socket = useContext(SocketContext);
   if (lod_.isEmpty(party)) return null;
 
+  const copyActualUrlToClipboard = () => {
+    const url = window.location.origin + "/r/" + party.uuid;
+    copyToClipboard(url);
+  };
+
+  const unsecuredCopyToClipboard = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {
+      console.error("Unable to copy to clipboard", err);
+    }
+    document.body.removeChild(textArea);
+  };
+
+  const copyToClipboard = (content) => {
+    if (window.isSecureContext && navigator.clipboard) {
+      navigator.clipboard.writeText(content);
+    } else {
+      unsecuredCopyToClipboard(content);
+    }
+  };
+
   return (
     <div className="multiColumn">
+      <ComponentChat
+        openChat={openChat}
+        closeChat={() => setOpenChat(false)}
+        onClick={() => setOpenChat(true)}
+        noButton
+      />
       <div className="columnDivider">
         <div>
           {party.users?.map((user, index) => {
@@ -113,23 +150,57 @@ const WaitingPannel = () => {
             );
           })}
         </div>
-        <SpecialButton
-          value={
-            party.users?.find((u) => u.uuid === user.uuid).ready
-              ? "Annuler"
-              : "Prêt"
-          }
-          style={{
-            width: "100%",
-            fontSize: "20px",
-          }}
-          onClick={() => {
-            socket.emit("readyUser", {
-              partyUUID: party.uuid,
-              uuid: user.uuid,
-            });
-          }}
-        />
+        <div className="waitingButtonsContainer">
+          <Tooltip
+            placement="top"
+            title="Partager le lien de la partie"
+            style={{
+              marginRight: "10px",
+            }}
+          >
+            <span>
+              <SpecialButton
+                icon
+                variant="pink"
+                value={<Link width={24} height={24} />}
+                onClick={copyActualUrlToClipboard}
+                style={{
+                  borderRadius: "15px",
+                }}
+              />
+            </span>
+          </Tooltip>
+          <PrimaryButton
+            value={
+              party.users?.find((u) => u.uuid === user.uuid).ready
+                ? "Annuler"
+                : "Prêt"
+            }
+            style={{
+              flex: 1,
+              fontSize: "20px",
+              borderRadius: "15px",
+            }}
+            onClick={() => {
+              socket.emit("readyUser", {
+                partyUUID: party.uuid,
+                uuid: user.uuid,
+              });
+            }}
+          />
+          <SpecialButton
+            icon
+            variant="green"
+            value={<Chat width={24} height={24} />}
+            onClick={() => {
+              setOpenChat(true);
+            }}
+            style={{
+              marginLeft: "10px",
+              borderRadius: "15px",
+            }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -303,8 +374,6 @@ export const Pannel = () => {
 
   return (
     <div className="pannel">
-      <div className="lightOne"></div>
-      <div className="lightTwo"></div>
       <div
         style={{
           width: "100%",
@@ -313,6 +382,7 @@ export const Pannel = () => {
           alignItems: "center",
           height: "100%",
           marginBottom: "5px",
+          zIndex: "10",
         }}
       >
         <img
@@ -333,11 +403,12 @@ export const Pannel = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          zIndex: "10",
         }}
       >
         <div className="onlineUsers">{bottomPannel()}</div>
         <div
-        className="buttonOption"
+          className="buttonOption"
           style={{
             position: "absolute",
             bottom: "15px",
@@ -347,6 +418,9 @@ export const Pannel = () => {
           {bottomButton()}
         </div>
       </div>
+
+      <div className="lightOne"></div>
+      <div className="lightTwo"></div>
     </div>
   );
 };

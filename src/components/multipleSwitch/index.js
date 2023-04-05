@@ -1,8 +1,14 @@
-import "./style.css";
+import "./style.scss";
 
-const CustomMultiple = ({ title, description, onClick, ...rest }) => {
+const CustomMultiple = ({
+  title,
+  description,
+  onClick,
+  className,
+  ...rest
+}) => {
   return (
-    <div className="switchMultiple" onClick={onClick} {...rest}>
+    <div className={`${className} switchMultiple`} onClick={onClick} {...rest}>
       <div className="switchMultipleHeader">
         <div className="switchMultipleTitle">{title}</div>
       </div>
@@ -22,9 +28,7 @@ export const MultipleSwitch = ({ items, selected, onClick }) => {
         title={item.title}
         description={item.description}
         onClick={() => onClick(item.code)}
-        style={{
-          backgroundColor: selected === item.code ? "#EEC643" : "",
-        }}
+        className={selected === item.code ? "selectedSwitch" : ""}
       />
     );
   });

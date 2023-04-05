@@ -1,5 +1,5 @@
-import "./style.css";
-import { Switch } from "@mui/material";
+import "./style.scss";
+import { CustomSwitch } from "../CustomSwitch";
 
 export const SwitchTimer = ({ title, items, value, setValue }) => {
   function handleChangeSwitch(e) {
@@ -12,30 +12,32 @@ export const SwitchTimer = ({ title, items, value, setValue }) => {
     <div className="switchTimer">
       <div className="switchTimerHeader">
         <div className="switchTimerTitle">{title}</div>
-        <Switch checked={Boolean(value)} onChange={handleChangeSwitch} />
+        <CustomSwitch checked={Boolean(value)} onChange={handleChangeSwitch} />
       </div>
-
-      <div className="switchTimerBody">
-        <div className="switchTimerDescription">
-          {items.map((item, index) => {
-            return (
-              <div
-                key={index}
-                className="switchTimerItem"
-                style={{
-                  backgroundColor: value === item ? "#EEC643" : "",
-                  color: value === item ? "#011638" : "",
-                }}
-                onClick={() => {
-                  handleChangeTimer(item);
-                }}
-              >
-                {`${item}s`}
-              </div>
-            );
-          })}
+      {value && (
+        <div className="switchTimerBody">
+          <div className="switchTimerDescription">
+            {items.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`${
+                    value === item ? "selectedTime" : ""
+                  } switchTimerItem`}
+                  onClick={() => {
+                    handleChangeTimer(item);
+                  }}
+                >
+                  <div>
+                    <span className="time">{`${item}`}</span>
+                    <span className="second">s</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

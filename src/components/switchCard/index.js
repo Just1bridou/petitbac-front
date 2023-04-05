@@ -1,5 +1,5 @@
-import "./style.css";
-import { Switch } from "@mui/material";
+import "./style.scss";
+import { CustomSwitch } from "../CustomSwitch";
 
 export const SwitchCard = ({ title, description, value, setValue }) => {
   function handleChange(e) {
@@ -9,7 +9,7 @@ export const SwitchCard = ({ title, description, value, setValue }) => {
     <div className="switchCard">
       <div className="switchCardHeader">
         <div className="switchCardTitle">{title}</div>
-        <Switch checked={value} onChange={handleChange} />
+        <CustomSwitch checked={value} onChange={handleChange} />
       </div>
 
       <div className="switchCardBody">

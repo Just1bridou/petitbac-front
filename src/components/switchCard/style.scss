@@ -1,0 +1,32 @@
+@import "../../app/assets/styles/index.scss";
+
+.switchCard {
+  background: $fadePink;
+  border-radius: 30px;
+  margin-top: 5px;
+  padding: 20px;
+}
+
+.switchCardHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switchCardTitle {
+  font-size: 30px;
+  text-transform: uppercase;
+  color: #ece9ee;
+  font-family: "Raleway Black";
+}
+
+.switchCardBody {
+  margin-top: 0.5vh;
+}
+
+.switchCardDescription {
+  color: #0f1029;
+  font-family: "Raleway Bold";
+  font-size: 18px;
+}

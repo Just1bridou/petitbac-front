@@ -3,8 +3,7 @@ import { SocketContext } from "../context/ws";
 import { useDispatch, useSelector } from "react-redux";
 import { createParty } from "../redux/slices/party";
 import { Layout } from "../../components/layout";
-import Header from "../../components/header";
-import { PrimaryButton, PrimaryInput } from "../../components/buttons";
+import { PrimaryButton } from "../../components/buttons";
 import "./lobby.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -22,48 +21,47 @@ const PartyCell = ({ party, onClick }) => {
           <h4 className="partyTitle">{`#${party.uuid}`}</h4>
         </div>
         <Tooltip
-        placement="right"
-        title={
-          <>
-            <ul>
-              {party.words.map((word, index) => {
-                return <li key={index}>{word}</li>;
-              })}
-            </ul>
-          </>
-        }
-      >
-        <div className="partyThemes">{`${party.words.length} Thèmes`}</div>
-      </Tooltip>
+          placement="right"
+          title={
+            <>
+              <ul>
+                {party.words.map((word, index) => {
+                  return <li key={index}>{word}</li>;
+                })}
+              </ul>
+            </>
+          }
+        >
+          <div className="partyThemes">{`${party.words.length} Thèmes`}</div>
+        </Tooltip>
       </div>
 
       <div className="partySubContainer">
-          <Tooltip
-              placement="right"
-              title={
-                <>
-                  <ul>
-                    {party.users.map((user, index) => {
-                      return <li key={index}>{user.pseudo}</li>;
-                    })}
-                  </ul>
-                </>
-              }
-            >
-              <div className="partyUsers">
-                <span className="partyUserCount">{party.users.length}</span>
-                <FontAwesomeIcon className="partyUserCountIcon" icon={faUser} />
-
-              </div>
+        <Tooltip
+          placement="right"
+          title={
+            <>
+              <ul>
+                {party.users.map((user, index) => {
+                  return <li key={index}>{user.pseudo}</li>;
+                })}
+              </ul>
+            </>
+          }
+        >
+          <div className="partyUsers">
+            <span className="partyUserCount">{party.users.length}</span>
+            <FontAwesomeIcon className="partyUserCountIcon" icon={faUser} />
+          </div>
         </Tooltip>
-          <Flag
-            code={party.language}
-            style={{
-              height: "10vh",
-              clipPath: "polygon(12% 0, 100% 0, 100% 100%, 0% 100%)",
-              opacity: "0.8"
-            }}
-          />
+        <Flag
+          code={party.language}
+          style={{
+            height: "10vh",
+            clipPath: "polygon(12% 0, 100% 0, 100% 100%, 0% 100%)",
+            opacity: "0.8",
+          }}
+        />
       </div>
     </div>
   );
@@ -86,12 +84,14 @@ export const Lobby = () => {
     <Layout
       horizontalAlign="start"
       verticalAlign="start"
-      style={{margin: "20px"}}
+      style={{ margin: "20px" }}
     >
       <div className="headerCustom">
         <h1>Partie publique</h1>
-        <span className="partiesCount">{`(${server?.parties?.length ?? 0})`}</span>
-        </div>
+        <span className="partiesCount">{`(${
+          server?.parties?.length ?? 0
+        })`}</span>
+      </div>
 
       {server?.parties?.length ? (
         <div className="partiesContainer">
@@ -125,24 +125,26 @@ export const Lobby = () => {
         </div>
       ) : (
         <div className="noPartyContainer">
-<img
+          <img
             alt="illustration"
             src={svgNoParties}
             style={{
               width: "40%",
             }}
           ></img>
-<div className="textNoParty">Il n'y a actuellement aucune partie publique</div>
+          <div className="textNoParty">
+            Il n'y a actuellement aucune partie publique
+          </div>
         </div>
       )}
 
-<div className="createPrivateRoom">
+      <div className="createPrivateRoom">
         <PrimaryButton
           value="Créer une partie privée"
           style={{
             width: "100%",
             height: "8vh",
-            fontSize: "20px"
+            fontSize: "20px",
           }}
           onClick={createPrivateParty}
         />

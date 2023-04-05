@@ -1,4 +1,4 @@
-import "./buttons.css";
+import "./buttons.scss";
 import useSound from "use-sound";
 import pop from "../../app/assets/sounds/pop.mp3";
 
@@ -45,7 +45,7 @@ export const PrimaryButton = ({ value, onClick, ...rest }) => {
   );
 };
 
-export const SpecialButton = ({ value, onClick, ...rest }) => {
+export const SpecialButton = ({ value, onClick, variant, icon, ...rest }) => {
   const [play] = useSound(pop);
 
   function handleClick() {
@@ -53,8 +53,28 @@ export const SpecialButton = ({ value, onClick, ...rest }) => {
     onClick();
   }
 
+  let variantClass = "";
+
+  switch (variant) {
+    case "pink":
+      variantClass = "button-pink";
+      break;
+    case "green":
+      variantClass = "button-green";
+      break;
+    default:
+      break;
+  }
+  if (icon) {
+    variantClass += " button-icon";
+  }
+
   return (
-    <button onClick={handleClick} className="button special-button" {...rest}>
+    <button
+      onClick={handleClick}
+      className={`${variantClass} button special-button`}
+      {...rest}
+    >
       {value}
     </button>
   );

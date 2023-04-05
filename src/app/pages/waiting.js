@@ -29,33 +29,6 @@ export const Waiting = () => {
   const [inputWord, setInputWord] = useState("");
   const [openChat, setOpenChat] = useState(false);
 
-  const copyActualUrlToClipboard = () => {
-    const url = window.location.origin + "/r/" + party.uuid;
-    copyToClipboard(url);
-  };
-
-  const unsecuredCopyToClipboard = (text) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand("copy");
-    } catch (err) {
-      console.error("Unable to copy to clipboard", err);
-    }
-    document.body.removeChild(textArea);
-  };
-
-  const copyToClipboard = (content) => {
-    if (window.isSecureContext && navigator.clipboard) {
-      navigator.clipboard.writeText(content);
-    } else {
-      unsecuredCopyToClipboard(content);
-    }
-  };
-
   function addNewWord() {
     if (!inputWord.trim()) return;
     if (!user.admin) return;
@@ -74,38 +47,6 @@ export const Waiting = () => {
         margin: "10px 20px",
       }}
     >
-      <Chat
-        openChat={openChat}
-        closeChat={() => setOpenChat(false)}
-        onClick={() => setOpenChat(true)}
-        style={{
-          position: "fixed",
-          top: "10px",
-          right: "10px",
-        }}
-      />
-      {/* <ChatButton
-        onClick={() => setOpenChat(true)}
-        style={{
-          position: "fixed",
-          top: "10px",
-          right: "10px",
-        }}
-      /> */}
-      <Header
-        title="Partie privée"
-        attributes={
-          <SpecialButton
-            value="Copier le lien d'invitation"
-            style={{
-              width: "100%",
-              fontSize: "20px",
-            }}
-            onClick={copyActualUrlToClipboard}
-          />
-        }
-      ></Header>
-
       <div className="waitingContainer">
         <div className="themesList">
           <Title title="Liste des thèmes" size="medium" />
@@ -194,7 +135,13 @@ export const Waiting = () => {
               });
             }}
           />
-          <Title title="Paramètres" size="medium" />
+          <Title
+            title="Paramètres"
+            size="medium"
+            style={{
+              marginTop: "2vh",
+            }}
+          />
           <SwitchTimer
             title="Timer"
             items={["30", "60", "90"]}

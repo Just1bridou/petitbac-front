@@ -1,0 +1,72 @@
+@import "../../app/assets/styles/index.scss";
+
+.switchTimer {
+  background: $fadePink;
+  border-radius: 30px;
+  margin-top: 5px;
+  padding: 20px;
+}
+
+.switchTimerHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switchTimerTitle {
+  font-size: 30px;
+  text-transform: uppercase;
+  color: #ece9ee;
+  font-family: "Raleway Black";
+}
+
+.switchTimerDescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-self: start;
+}
+
+.switchTimerItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  background-color: #011638;
+  border-radius: 15px;
+
+  cursor: pointer;
+
+  font-size: 30px;
+  text-transform: uppercase;
+  color: #ece9ee;
+  font-family: "Raleway Black";
+
+  background: $menuBackground;
+
+  padding: 1vh 2vw;
+}
+
+.switchTimerItem:hover {
+  filter: brightness(0.8);
+}
+.time {
+  font-size: 30px;
+  text-transform: uppercase;
+  color: #ece9ee;
+  font-family: "Raleway Black";
+}
+
+.second {
+  font-size: 20px;
+  text-transform: uppercase;
+  color: #ece9ee;
+  font-family: "Raleway Black";
+  margin-left: 5px;
+}
+
+.selectedTime {
+  background: $fadeGreen;
+}

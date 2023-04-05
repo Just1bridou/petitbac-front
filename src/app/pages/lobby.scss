@@ -24,10 +24,10 @@
 }
 
 .partiesCount {
-  color: #2D3FDD;
+  color: #2d3fdd;
   font-family: "Raleway Bold";
   font-size: 30px;
-  margin-left: 20px
+  margin-left: 20px;
 }
 
 .noPartyContainer {
@@ -40,14 +40,14 @@
 }
 
 .textNoParty {
-  color: #ECE9EE;
+  color: #ece9ee;
   opacity: 0.6;
   font-size: 20px;
-  font-family: "Raleway Light"
+  font-family: "Raleway Light";
 }
 
 .partyContainer {
-  background-color: #1C1B3E;
+  background-color: #1c1b3e;
   border-radius: 30px;
   overflow: hidden;
   width: 100%;
@@ -64,7 +64,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100%
+  height: 100%;
 }
 
 .partyTitleContainer {
@@ -73,38 +73,37 @@
   background: $menuBackground;
   height: 100%;
   display: flex;
-  justify-content: center
+  justify-content: center;
 }
 
 .partyTitle {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #ECE9EE;
+  color: #ece9ee;
   text-transform: uppercase;
   font-family: "Raleway Bold";
-  
 }
 
 .partyUsers {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: end;
-  margin-right: 2vw
+  justify-content: flex-end;
+  margin-right: 2vw;
 }
 
 .partyUserCount {
   font-family: "Raleway ExtraBold";
-  color: #ECE9EE;
-  font-size: 30px
+  color: #ece9ee;
+  font-size: 30px;
 }
 
 .partyUserCountIcon {
-  color: #ECE9EE;
+  color: #ece9ee;
   opacity: 0.6;
   font-size: 20px;
-  margin-left: 0.5vw
+  margin-left: 0.5vw;
 }
 
 .partyThemes {
@@ -116,7 +115,7 @@
   color: #eef0f2;
   font-size: 1.2em;
   font-family: "Raleway Bold";
-  margin-left: 2vw
+  margin-left: 2vw;
 }
 
 ul {

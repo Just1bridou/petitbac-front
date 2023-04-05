@@ -18,7 +18,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export const Chat = ({ openChat, closeChat, onClick, ...rest }) => {
+export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
   const [unreadMessages, setUnreadMessages] = useState(0);
 
   const { party, user } = useSelector((state) => state);
@@ -62,21 +62,23 @@ export const Chat = ({ openChat, closeChat, onClick, ...rest }) => {
       {/*
        * Button for open chat
        */}
-      <Box className="containerOpenChat">
-        <IconButton
-          className="buttonOpenChat"
-          size="small"
-          onClick={() => {
-            onClick();
-            setUnreadMessages(0);
-          }}
-          {...rest}
-        >
-          <StyledBadge badgeContent={unreadMessages} color="primary">
-            <FontAwesomeIcon icon={faMessage} />
-          </StyledBadge>
-        </IconButton>
-      </Box>
+      {!noButton && (
+        <Box className="containerOpenChat">
+          <IconButton
+            className="buttonOpenChat"
+            size="small"
+            onClick={() => {
+              onClick();
+              setUnreadMessages(0);
+            }}
+            {...rest}
+          >
+            <StyledBadge badgeContent={unreadMessages} color="primary">
+              <FontAwesomeIcon icon={faMessage} />
+            </StyledBadge>
+          </IconButton>
+        </Box>
+      )}
       {/*
        * Drawer for show chat
        */}
