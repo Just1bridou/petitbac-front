@@ -1,3 +1,5 @@
+@import "../../app/assets/styles/index.scss";
+
 .containerOpenChat {
   position: fixed;
   top: 10px;
@@ -20,6 +22,7 @@
   justify-content: space-between;
   flex-direction: column;
   height: 100%;
+  margin: 10px;
 }
 
 .chatFeed {
@@ -33,14 +36,16 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: #0d21a13f;
+  background: $fadeRed;
   padding: 10px;
   border-radius: 10px;
+  margin-right: 20%;
 }
 
 .selfMessage {
   text-align: right;
-  background-color: #eec64344;
+  background: $fadeGreen;
+  margin-left: 20%;
 }
 
 .chatMessagePseudo {

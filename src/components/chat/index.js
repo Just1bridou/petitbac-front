@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge, Drawer, IconButton, List, ListItem } from "@mui/material";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
@@ -57,6 +57,12 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
     scrollToBottom();
   }, 100);
 
+  const styles = {
+    paper: {
+      background: "blue",
+    },
+  };
+
   return (
     <>
       {/*
@@ -82,7 +88,20 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
       {/*
        * Drawer for show chat
        */}
-      <Drawer anchor="right" open={openChat} onClose={closeChat}>
+      <Drawer
+        PaperProps={{
+          sx: {
+            backgroundColor: "#011638",
+            margin: "20px",
+            padding: "10px",
+            borderRadius: "25px",
+            height: "calc(100% - 40px)",
+          },
+        }}
+        anchor="right"
+        open={openChat}
+        onClose={closeChat}
+      >
         <Box className="chat">
           <List className="chatFeed">
             {chatFeed.map((item, index) => {
@@ -111,11 +130,9 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
             type="text"
             placeholder="Message ..."
             style={{
-              height: "40px",
+              height: "6vh",
               fontSize: "20px",
-              width: "100%",
-              backgroundColor: "#d9d9d9",
-              borderRadius: "0px",
+              borderRadius: "10px",
             }}
             onEnterPress={() => {
               setMessage("");

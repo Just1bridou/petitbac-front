@@ -13,6 +13,11 @@ $fadePink: linear-gradient(
   rgba(236, 233, 238, 0.6) 6.55%,
   rgba(235, 206, 255, 0.6) 96.2%
 );
+$fadePinkDemi: linear-gradient(
+  92.85deg,
+  rgba(236, 233, 238, 0.264) 6.55%,
+  rgba(235, 206, 255, 0.271) 96.2%
+);
 $fadeRed: linear-gradient(90.48deg, #821b67 2.19%, #d12e8a 100%);
 $fadeGreen: linear-gradient(124.36deg, #25bf89 0%, #1d3850 100%);
 

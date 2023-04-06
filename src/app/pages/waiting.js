@@ -1,4 +1,4 @@
-import "./waiting.css";
+import "./waiting.scss";
 import { useContext, useState } from "react";
 import { SocketContext } from "../context/ws";
 import { useSelector } from "react-redux";
@@ -13,12 +13,13 @@ import { MultipleSwitch } from "../../components/multipleSwitch";
 import { SwitchTimer } from "../../components/switchTimer";
 import { RoundsInput } from "../../components/roundsInput";
 import { FlagsCard } from "../../components/flagsCard";
-import { Chat } from "../../components/chat";
+import { Send, Close } from "@carbon/icons-react";
 
 const ActionIconButton = ({ icon, onClick }) => {
   return (
     <div className="actionIconButton" onClick={onClick}>
-      <FontAwesomeIcon icon={icon} />
+      {/* <FontAwesomeIcon className="actionIconButtonIcon" icon={icon} /> */}
+      <Close className="actionIconButtonIcon" />
     </div>
   );
 };
@@ -27,7 +28,6 @@ export const Waiting = () => {
   const { party, user } = useSelector((state) => state);
   const socket = useContext(SocketContext);
   const [inputWord, setInputWord] = useState("");
-  const [openChat, setOpenChat] = useState(false);
 
   function addNewWord() {
     if (!inputWord.trim()) return;
@@ -39,10 +39,18 @@ export const Waiting = () => {
     setInputWord("");
   }
 
+  function removePartyWord(word) {
+    if (!user.admin) return;
+    socket.emit("removePartyWord", {
+      uuid: party.uuid,
+      word: word,
+    });
+  }
+
   return (
     <Layout
       horizontalAlign="start"
-      verticalAlign="start"
+      verticalAlign="flex-end"
       style={{
         margin: "10px 20px",
       }}
@@ -53,61 +61,70 @@ export const Waiting = () => {
           <>
             {party?.mode === "classic" ? (
               <div className="themesEditor">
-                <div className="themesDisplay">
-                  {party?.words?.map((word, index) => {
-                    return (
-                      <div key={index} className="themeLine">
-                        <div className="theme">{word}</div>
-                        {party?.words?.length > 1 && (
-                          <ActionIconButton
-                            icon={faClose}
-                            onClick={() => {
-                              addNewWord();
-                            }}
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-                {user.admin && (
-                  <div className="themeLine" style={{ margin: 0 }}>
-                    <PrimaryInput
-                      value={inputWord}
-                      onChange={(e) => {
-                        setInputWord(e.target.value);
-                      }}
-                      type="text"
-                      placeholder="Ajouter un theme ..."
-                      style={{
-                        fontSize: "20px",
-                        width: "100%",
-                        backgroundColor: "#d9d9d9",
-                        marginRight: "5px",
-                      }}
-                      onEnterPress={() => {
-                        addNewWord();
-                      }}
-                    />
-                    <ActionIconButton
-                      icon={faPaperPlane}
-                      onClick={() => {
-                        if (!inputWord.trim()) return;
-                        if (!user.admin) return;
-                        socket.emit("addPartyWord", {
-                          uuid: party.uuid,
-                          newWord: inputWord,
-                        });
-                        setInputWord("");
-                      }}
-                    />
-                  </div>
-                )}
+                {party?.words?.map((word, index) => {
+                  return (
+                    <div key={index} className="themeLine">
+                      <div className="theme">{word}</div>
+                      {party?.words?.length > 1 && (
+                        <ActionIconButton
+                          icon={faClose}
+                          onClick={() => {
+                            removePartyWord(word);
+                          }}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="displayMode">Mode de jeu aléatoire</div>
             )}
           </>
+
+          {party?.mode === "classic" && user.admin && (
+            <div className="inputAddWordContainer">
+              <PrimaryInput
+                value={inputWord}
+                onChange={(e) => {
+                  setInputWord(e.target.value);
+                }}
+                type="text"
+                placeholder="Ajouter un theme ..."
+                // style={{
+                //   fontSize: "20px",
+                //   width: "100%",
+                //   backgroundColor: "#d9d9d9",
+                //   marginRight: "5px",
+                // }}
+                style={{
+                  flex: 1,
+                  borderRadius: "15px",
+                  marginRight: "5px",
+                  fontSize: "20px",
+                  height: "7vh",
+                }}
+                onEnterPress={() => {
+                  addNewWord();
+                }}
+              />
+
+              <SpecialButton
+                icon
+                variant="pink"
+                value={
+                  <Send width={24} height={24} />
+                  // <FontAwesomeIcon width={24} height={24} icon={faPaperPlane} />
+                }
+                onClick={addNewWord}
+                style={{
+                  borderRadius: "15px",
+                  width: "7vh",
+                  height: "7vh",
+                }}
+              />
+            </div>
+          )}
         </div>
         <div className="optionList">
           <Title title="Mode de jeu" size="medium" />
