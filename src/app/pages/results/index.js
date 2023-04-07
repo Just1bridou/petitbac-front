@@ -1,10 +1,10 @@
-import "./results.css";
+import "./style.css";
 import { useContext, useState } from "react";
-import { SocketContext } from "../context/ws";
+import { SocketContext } from "app/context/ws";
 import { useSelector } from "react-redux";
-import { Layout } from "../../components/layout";
-import Header from "../../components/header";
-import { Chat } from "../../components/chat";
+import { Layout } from "components/layout";
+import Header from "components/header";
+import { Chat } from "components/chat";
 import { Tooltip } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";

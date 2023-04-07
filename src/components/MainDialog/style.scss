@@ -1,0 +1,29 @@
+@import "../../app/assets/styles/index.scss";
+
+.mainDialog {
+  background: $fadeRed;
+  border-radius: 30px !important;
+  padding: 20px !important;
+}
+
+.mainDialogTitle {
+  font-size: 2rem !important;
+  font-family: "Raleway Black" !important;
+  color: #ececec !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.mainDialogText {
+  font-size: 1.5rem !important;
+  font-family: "Raleway Medium" !important;
+  color: #ececec !important;
+}
+
+.mainDialogButton {
+  background-color: #2d3fdd !important;
+  border-radius: 15px !important;
+  color: #ececec !important;
+  font-family: "Raleway ExtraBold" !important;
+  font-size: 15px !important;
+  padding: 10px 20px !important;
+}

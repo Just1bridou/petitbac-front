@@ -1,18 +1,16 @@
-import "./waiting.scss";
+import "./style.scss";
 import { useContext, useState } from "react";
-import { SocketContext } from "../context/ws";
+import { SocketContext } from "app/context/ws";
 import { useSelector } from "react-redux";
-import { Layout } from "../../components/layout";
-import Header from "../../components/header";
-import { PrimaryInput, SpecialButton } from "../../components/buttons";
-import { Title } from "../../components/titles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { SwitchCard } from "../../components/switchCard";
-import { MultipleSwitch } from "../../components/multipleSwitch";
-import { SwitchTimer } from "../../components/switchTimer";
-import { RoundsInput } from "../../components/roundsInput";
-import { FlagsCard } from "../../components/flagsCard";
+import { Layout } from "components/layout";
+import { PrimaryInput, SpecialButton } from "components/buttons";
+import { Title } from "components/titles";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { SwitchCard } from "components/switchCard";
+import { MultipleSwitch } from "components/multipleSwitch";
+import { SwitchTimer } from "components/switchTimer";
+import { RoundsInput } from "components/roundsInput";
+import { FlagsCard } from "components/flagsCard";
 import { Send, Close } from "@carbon/icons-react";
 
 const ActionIconButton = ({ icon, onClick }) => {

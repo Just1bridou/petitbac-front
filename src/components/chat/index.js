@@ -31,7 +31,14 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
+export const Chat = ({
+  openChat,
+  closeChat,
+  onClick,
+  noButton,
+  newMessageHandle,
+  ...rest
+}) => {
   const EASTER_EGG_TRIGGER = 12;
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
@@ -51,6 +58,7 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
     !isMuted && newMsg.user !== user.pseudo && read(str);
     dispatch(refreshPartyChat(data));
     if (!openChat) {
+      newMessageHandle && newMessageHandle(newMsg);
       setUnreadMessages(unreadMessages + 1);
     }
   });

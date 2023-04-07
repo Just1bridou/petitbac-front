@@ -16,11 +16,20 @@ import { Chat as ComponentChat } from "../../components/chat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faRightFromBracket, faCrown } from "@fortawesome/free-solid-svg-icons";
-import { IconButton, Tooltip } from "@mui/material";
+import { Badge, IconButton, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
 import { PrimaryButton, SpecialButton } from "../buttons";
 import { Chat, Link } from "@carbon/icons-react";
+import styled from "@emotion/styled";
 library.add(faRightFromBracket);
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    padding: "0 4px",
+  },
+}));
 
 const UserBox = ({ user, icon, isReady, secondLine = null }) => {
   return (
@@ -72,6 +81,8 @@ const WaitingPannel = () => {
   const { party, user } = useSelector((state) => state);
   const actualUser = useSelector((state) => state.user);
   const socket = useContext(SocketContext);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
   if (lod_.isEmpty(party)) return null;
 
   const copyActualUrlToClipboard = () => {
@@ -108,6 +119,9 @@ const WaitingPannel = () => {
         closeChat={() => setOpenChat(false)}
         onClick={() => setOpenChat(true)}
         noButton
+        newMessageHandle={() => {
+          setUnreadMessages((unreadMessages) => unreadMessages + 1);
+        }}
       />
       <div className="columnDivider">
         <div>
@@ -188,18 +202,21 @@ const WaitingPannel = () => {
               });
             }}
           />
-          <SpecialButton
-            icon
-            variant="green"
-            value={<Chat width={24} height={24} />}
-            onClick={() => {
-              setOpenChat(true);
-            }}
-            style={{
-              marginLeft: "10px",
-              borderRadius: "15px",
-            }}
-          />
+          <StyledBadge badgeContent={unreadMessages} color="primary">
+            <SpecialButton
+              icon
+              variant="green"
+              value={<Chat width={24} height={24} />}
+              onClick={() => {
+                setUnreadMessages(0);
+                setOpenChat(true);
+              }}
+              style={{
+                marginLeft: "10px",
+                borderRadius: "15px",
+              }}
+            />
+          </StyledBadge>
         </div>
       </div>
     </div>

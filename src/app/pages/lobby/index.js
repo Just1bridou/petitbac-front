@@ -1,17 +1,17 @@
 import { useContext } from "react";
-import { SocketContext } from "../context/ws";
+import { SocketContext } from "app/context/ws";
 import { useDispatch, useSelector } from "react-redux";
-import { createParty } from "../redux/slices/party";
-import { Layout } from "../../components/layout";
-import { PrimaryButton } from "../../components/buttons";
-import "./lobby.scss";
+import { createParty } from "app/redux/slices/party";
+import { Layout } from "components/layout";
+import { PrimaryButton } from "components/buttons";
+import "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "@mui/material";
 import Flag from "react-world-flags";
-import { login } from "../redux/slices/user";
+import { login } from "app/redux/slices/user";
 import { useNavigate } from "react-router-dom";
-import svgNoParties from "../assets/illustrations/SVG_empty.svg";
+import svgNoParties from "app/assets/illustrations/SVG_empty.svg";
 
 const PartyCell = ({ party, onClick }) => {
   return (

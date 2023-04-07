@@ -1,11 +1,11 @@
-import "./game.css";
+import "./style.css";
 import { useContext, useState } from "react";
-import { SocketContext } from "../context/ws";
+import { SocketContext } from "app/context/ws";
 import { useSelector } from "react-redux";
-import { Layout } from "../../components/layout";
-import Header from "../../components/header";
-import { PrimaryInput } from "../../components/buttons";
-import { Chat } from "../../components/chat";
+import { Layout } from "components/layout";
+import Header from "components/header";
+import { PrimaryInput } from "components/buttons";
+import { Chat } from "components/chat";
 
 const LetterContainer = ({ letter }) => {
   return (

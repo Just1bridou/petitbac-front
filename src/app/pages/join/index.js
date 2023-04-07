@@ -1,32 +1,43 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
-import { SocketContext } from "../context/ws";
+import { SocketContext } from "app/context/ws";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/slices/user";
-import { PrimaryButton, PrimaryInput } from "../../components/buttons/index";
-import logo from "../assets/images/logo.png";
-import { Layout } from "../../components/layout";
-import svgLogin from "../assets/illustrations/SVG_login.svg";
+import { login } from "app/redux/slices/user";
+import { PrimaryButton, PrimaryInput } from "components/buttons/index";
+import logo from "app/assets/images/logo.png";
+import { Layout } from "components/layout";
+import { createParty } from "app/redux/slices/party";
+import svgLogin from "app/assets/illustrations/SVG_login.svg";
+import { MainDialog } from "components/MainDialog";
 
-export const Login = () => {
+export const JoinPage = () => {
+  let { id } = useParams();
   const [pseudo, setPseudo] = useState("");
   const socket = useContext(SocketContext);
   const uuid = useSelector((state) => state.ws.uuid);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  function loginUser() {
+  const joinUser = () => {
     if (!!pseudo) {
       socket.emit(
-        "login",
+        "joinRoom",
         {
           uuid: uuid,
           pseudo: pseudo,
+          roomUUID: id,
         },
-        ({ user }) => {
-          dispatch(login({ user: user }));
+        (ack) => {
+          if (!ack.error) {
+            dispatch(login({ user: ack.user }));
+            dispatch(createParty({ party: ack.party }));
+            socket.emit("saveUser", { uuid: uuid });
+            navigate("/waiting");
+          }
         }
       );
     }
-  }
+  };
 
   return (
     <Layout verticalAlign="unset" /*horizontalAlign="unset"*/>
@@ -42,6 +53,7 @@ export const Login = () => {
           alignContent: "center",
         }}
       >
+        <MainDialog />
         <img
           style={{
             height: "25vh",
@@ -74,11 +86,11 @@ export const Login = () => {
               width: "100%",
               padding: "2% 3%",
             }}
-            onEnterPress={loginUser}
+            onEnterPress={joinUser}
           />
           <PrimaryButton
-            value="Jouer"
-            onClick={loginUser}
+            value="Rejoindre"
+            onClick={joinUser}
             style={{
               marginTop: "1rem",
               width: "100%",
