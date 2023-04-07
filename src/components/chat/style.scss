@@ -40,19 +40,26 @@
   padding: 10px;
   border-radius: 10px;
   margin-right: 20%;
+  border-bottom-left-radius: 0;
+  color: #ececec;
 }
 
 .selfMessage {
   text-align: right;
   background: $fadeGreen;
   margin-left: 20%;
+  margin-right: 0;
+
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 0;
 }
 
 .chatMessagePseudo {
-  font-weight: bold;
+  font-family: "Raleway Bold";
   font-size: 1.2em;
 }
 
 .chatMessageMessage {
+  font-family: "Raleway Light";
   font-size: 1em;
 }

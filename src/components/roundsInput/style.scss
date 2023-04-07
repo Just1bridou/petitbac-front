@@ -10,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
 
-  overflow: hidden;
+  // overflow: hidden;
 }
 .roundsInputTitle {
   padding: 20px;
@@ -36,4 +36,7 @@
   text-transform: uppercase;
   color: #ece9ee;
   font-family: "Raleway Black";
+
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
 }

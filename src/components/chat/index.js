@@ -1,14 +1,27 @@
 import "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, Drawer, IconButton, List, ListItem } from "@mui/material";
+import {
+  Badge,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  Tooltip,
+} from "@mui/material";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import { Box } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import { PrimaryInput } from "../buttons";
+import { PrimaryInput, SpecialButton } from "../buttons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SocketContext } from "../../app/context/ws";
 import { refreshPartyChat } from "../../app/redux/slices/party";
 import styled from "@emotion/styled";
+import {
+  Send,
+  VolumeUpFilled,
+  VolumeMuteFilled,
+  Translate,
+} from "@carbon/icons-react";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -19,8 +32,10 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
+  const EASTER_EGG_TRIGGER = 12;
   const [unreadMessages, setUnreadMessages] = useState(0);
-
+  const [isMuted, setIsMuted] = useState(true);
+  const [easterEggVoc, setEasterEggVoc] = useState(0);
   const { party, user } = useSelector((state) => state);
   const [message, setMessage] = useState("");
   const socket = useContext(SocketContext);
@@ -31,6 +46,9 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
 
   socket.removeListener("newChatMessage");
   socket.on("newChatMessage", (data) => {
+    let newMsg = data.chat[data.chat.length - 1];
+    let str = `${newMsg.user} à dit : ${newMsg.message}`;
+    !isMuted && newMsg.user !== user.pseudo && read(str);
     dispatch(refreshPartyChat(data));
     if (!openChat) {
       setUnreadMessages(unreadMessages + 1);
@@ -57,11 +75,17 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
     scrollToBottom();
   }, 100);
 
-  const styles = {
-    paper: {
-      background: "blue",
-    },
-  };
+  function read(msg) {
+    var reader = new SpeechSynthesisUtterance();
+    // easter egg
+    if (easterEggVoc > EASTER_EGG_TRIGGER) {
+      var voices = window.speechSynthesis.getVoices();
+      reader.voice = voices[Math.floor(Math.random() * voices.length)];
+    }
+    // end
+    reader.text = msg;
+    window.speechSynthesis.speak(reader);
+  }
 
   return (
     <>
@@ -122,23 +146,69 @@ export const Chat = ({ openChat, closeChat, onClick, noButton, ...rest }) => {
               );
             })}
           </List>
-          <PrimaryInput
-            value={message}
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
-            type="text"
-            placeholder="Message ..."
+          <div
             style={{
-              height: "6vh",
-              fontSize: "20px",
-              borderRadius: "10px",
+              display: "flex",
+              justifyContent: "space-between",
             }}
-            onEnterPress={() => {
-              setMessage("");
-              sendMessage();
-            }}
-          />
+          >
+            <Tooltip placement="top" title="Activer / Couper le son du chat">
+              <span>
+                <SpecialButton
+                  icon
+                  variant={isMuted ? "pink" : "green"}
+                  value={
+                    easterEggVoc > EASTER_EGG_TRIGGER ? (
+                      <Translate width={24} height={24} />
+                    ) : isMuted ? (
+                      <VolumeMuteFilled width={24} height={24} />
+                    ) : (
+                      <VolumeUpFilled width={24} height={24} />
+                    )
+                  }
+                  onClick={() => {
+                    setIsMuted(!isMuted);
+                    setEasterEggVoc(easterEggVoc + 1);
+                  }}
+                  style={{
+                    marginRight: "10px",
+                    borderRadius: "15px",
+                  }}
+                />
+              </span>
+            </Tooltip>
+            <PrimaryInput
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+              type="text"
+              placeholder="Message ..."
+              style={{
+                // height: "6vh",
+                width: "70%",
+                fontSize: "20px",
+                borderRadius: "10px",
+              }}
+              onEnterPress={() => {
+                setMessage("");
+                sendMessage();
+              }}
+            />
+            <SpecialButton
+              icon
+              variant="pink"
+              value={<Send width={24} height={24} />}
+              onClick={() => {
+                setMessage("");
+                sendMessage();
+              }}
+              style={{
+                marginLeft: "10px",
+                borderRadius: "15px",
+              }}
+            />
+          </div>
         </Box>
       </Drawer>
     </>
