@@ -15,7 +15,7 @@
 
 .partiesContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   width: 100%;
   /* flex-wrap: wrap; */
@@ -121,4 +121,9 @@
 ul {
   list-style: none;
   padding-left: 0;
+}
+
+.tooltipClass {
+  font-size: 20px;
+  font-family: "Raleway Light";
 }

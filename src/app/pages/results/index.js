@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 import { useContext, useState } from "react";
 import { SocketContext } from "app/context/ws";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { Chat } from "components/chat";
 import { Tooltip } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { SearchLocateMirror } from "@carbon/icons-react";
 
 const LetterContainer = ({ letter }) => {
   return (
@@ -20,6 +21,7 @@ const LetterContainer = ({ letter }) => {
 const VoteBlock = ({ vote, onClick, style, title, ...rest }) => {
   return (
     <Tooltip
+      arrow
       placement="top"
       title={title ?? ""}
       style={{
@@ -28,10 +30,10 @@ const VoteBlock = ({ vote, onClick, style, title, ...rest }) => {
     >
       <div
         onClick={onClick}
-        className="vote"
+        className={`vote ${vote ? "voteGreen" : "voteRed"}`}
         style={{
           ...style,
-          backgroundColor: vote ? "#37dc37" : "#ff5c5c",
+          // backgroundColor: vote ? "#37dc37" : "#ff5c5c",
         }}
         {...rest}
       ></div>
@@ -175,14 +177,15 @@ export const Results = () => {
                             rel="noreferrer"
                             style={{
                               textDecoration: "none",
-                              color: "black",
+                              color: "#ececec",
                             }}
                           >
                             <Tooltip
+                              arrow
                               placement="top"
                               title={`Voir si "${actualAnswer.word}" existe`}
                             >
-                              <FontAwesomeIcon icon={faBook} />
+                              <SearchLocateMirror height={24} width={24} />
                             </Tooltip>
                           </a>
                         )}

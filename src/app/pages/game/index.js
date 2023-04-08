@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 import { useContext, useState } from "react";
 import { SocketContext } from "app/context/ws";
 import { useSelector } from "react-redux";
@@ -99,8 +99,8 @@ export const Game = () => {
                   placeholder={`${party.currentLetter.toUpperCase()} ...`}
                   style={{
                     width: "100%",
-                    color: "#666666",
-                    height: "10vh",
+                    // color: "#666666",
+                    padding: "20px 30px",
                     textTransform: "uppercase",
                     fontStyle: "normal",
                   }}

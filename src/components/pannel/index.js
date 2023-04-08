@@ -21,6 +21,7 @@ import { useContext, useState } from "react";
 import { PrimaryButton, SpecialButton } from "../buttons";
 import { Chat, Link } from "@carbon/icons-react";
 import styled from "@emotion/styled";
+
 library.add(faRightFromBracket);
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -78,6 +79,10 @@ const LobbyPannel = () => {
 
 const WaitingPannel = () => {
   const [openChat, setOpenChat] = useState(false);
+  const [openCopyLink, setOpenCopyLink] = useState(true);
+  const [copyLinkText, setCopyLinkText] = useState(
+    "Partager le lien de la partie à vos amis !"
+  );
   const { party, user } = useSelector((state) => state);
   const actualUser = useSelector((state) => state.user);
   const socket = useContext(SocketContext);
@@ -110,6 +115,18 @@ const WaitingPannel = () => {
     } else {
       unsecuredCopyToClipboard(content);
     }
+    setCopyLinkText("Lien copié dans le presse-papier !");
+    setTimeout(() => {
+      setCopyLinkText("Partager le lien de la partie à vos amis !");
+    }, 3000);
+  };
+
+  const handleCloseCopyLink = () => {
+    setOpenCopyLink(false);
+  };
+
+  const handleOpenCopyLink = () => {
+    setOpenCopyLink(true);
   };
 
   return (
@@ -166,10 +183,22 @@ const WaitingPannel = () => {
         </div>
         <div className="waitingButtonsContainer">
           <Tooltip
+            arrow
+            open={openCopyLink}
+            onClose={handleCloseCopyLink}
+            onOpen={handleOpenCopyLink}
             placement="top"
-            title="Partager le lien de la partie"
+            title={copyLinkText}
             style={{
               marginRight: "10px",
+            }}
+            componentsProps={{
+              tooltip: {
+                style: {
+                  fontSize: "20px",
+                  fontFamily: "Raleway Light",
+                },
+              },
             }}
           >
             <span>
@@ -224,12 +253,23 @@ const WaitingPannel = () => {
 };
 
 const GamePannel = () => {
+  const [openChat, setOpenChat] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const { party } = useSelector((state) => state);
   const socket = useContext(SocketContext);
   if (lod_.isEmpty(party)) return null;
 
   return (
     <div className="multiColumn">
+      <ComponentChat
+        openChat={openChat}
+        closeChat={() => setOpenChat(false)}
+        onClick={() => setOpenChat(true)}
+        noButton
+        newMessageHandle={() => {
+          setUnreadMessages((unreadMessages) => unreadMessages + 1);
+        }}
+      />
       <div className="columnDivider">
         <div>
           {party.users?.map((user, index) => {
@@ -250,30 +290,60 @@ const GamePannel = () => {
             );
           })}
         </div>
-        <SpecialButton
-          value="STOP"
-          style={{
-            width: "100%",
-            fontSize: "20px",
-          }}
-          onClick={() => {
-            socket.emit("stopGame", {
-              uuid: party.uuid,
-            });
-          }}
-        />
+
+        <div className="waitingButtonsContainer">
+          <PrimaryButton
+            value="Stop"
+            style={{
+              flex: 1,
+              fontSize: "20px",
+              borderRadius: "15px",
+            }}
+            onClick={() => {
+              socket.emit("stopGame", {
+                uuid: party.uuid,
+              });
+            }}
+          />
+          <StyledBadge badgeContent={unreadMessages} color="primary">
+            <SpecialButton
+              icon
+              variant="green"
+              value={<Chat width={24} height={24} />}
+              onClick={() => {
+                setUnreadMessages(0);
+                setOpenChat(true);
+              }}
+              style={{
+                marginLeft: "10px",
+                borderRadius: "15px",
+              }}
+            />
+          </StyledBadge>
+        </div>
       </div>
     </div>
   );
 };
 
 const ResultsPannel = () => {
+  const [openChat, setOpenChat] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const { party, user } = useSelector((state) => state);
   const socket = useContext(SocketContext);
   if (lod_.isEmpty(party)) return null;
 
   return (
     <div className="multiColumn">
+      <ComponentChat
+        openChat={openChat}
+        closeChat={() => setOpenChat(false)}
+        onClick={() => setOpenChat(true)}
+        noButton
+        newMessageHandle={() => {
+          setUnreadMessages((unreadMessages) => unreadMessages + 1);
+        }}
+      />
       <div className="columnDivider">
         <div>
           {party.users?.map((user, index) => {
@@ -295,19 +365,38 @@ const ResultsPannel = () => {
             );
           })}
         </div>
-        <SpecialButton
-          value="Suivant"
-          style={{
-            width: "100%",
-            fontSize: "20px",
-          }}
-          onClick={() => {
-            socket.emit("nextRound", {
-              partyUUID: party.uuid,
-              uuid: user.uuid,
-            });
-          }}
-        />
+
+        <div className="waitingButtonsContainer">
+          <PrimaryButton
+            value="Suivant"
+            style={{
+              flex: 1,
+              fontSize: "20px",
+              borderRadius: "15px",
+            }}
+            onClick={() => {
+              socket.emit("nextRound", {
+                partyUUID: party.uuid,
+                uuid: user.uuid,
+              });
+            }}
+          />
+          <StyledBadge badgeContent={unreadMessages} color="primary">
+            <SpecialButton
+              icon
+              variant="green"
+              value={<Chat width={24} height={24} />}
+              onClick={() => {
+                setUnreadMessages(0);
+                setOpenChat(true);
+              }}
+              style={{
+                marginLeft: "10px",
+                borderRadius: "15px",
+              }}
+            />
+          </StyledBadge>
+        </div>
       </div>
     </div>
   );
@@ -399,7 +488,7 @@ export const Pannel = () => {
           alignItems: "center",
           height: "100%",
           marginBottom: "5px",
-          zIndex: "10",
+          zIndex: "1",
         }}
       >
         <img
@@ -420,7 +509,7 @@ export const Pannel = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          zIndex: "10",
+          zIndex: "1",
         }}
       >
         <div className="onlineUsers">{bottomPannel()}</div>
