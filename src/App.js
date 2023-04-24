@@ -11,6 +11,7 @@ import { JoinPage } from "./app/pages/join";
 import { Game } from "./app/pages/game";
 import { Results } from "./app/pages/results";
 import { Background } from "./components/Background";
+import { FinalScore } from "app/pages/finalScore";
 const Home = () => {
   return (
     <section>
@@ -50,6 +51,7 @@ function App() {
             <Route exact path="/waiting" element={<Waiting />} />
             <Route exact path="/game" element={<Game />} />
             <Route exact path="/results" element={<Results />} />
+            <Route exact path="/scoreboard" element={<FinalScore />} />
             <Route exact path="/r/:id" element={<JoinPage />} />
           </Routes>
         </SocketContext.Provider>

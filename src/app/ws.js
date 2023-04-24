@@ -14,6 +14,7 @@ import {
   updateUser,
 } from "./redux/slices/server.js";
 import lod_ from "lodash";
+import { updateSeeTotalScore, resetMisc } from "./redux/slices/misc.js";
 
 const WebSockets = () => {
   const socket = useContext(SocketContext);
@@ -90,6 +91,12 @@ const WebSockets = () => {
       dispatch(refreshParty({ party }));
     });
     /**
+     *
+     */
+    socket.on("gameIsFinish", ({ canSeeTotalScore }) => {
+      dispatch(updateSeeTotalScore(canSeeTotalScore));
+    });
+    /**
      * Disconnect
      */
     socket.on("disconnect", () => {
@@ -97,6 +104,7 @@ const WebSockets = () => {
       dispatch(resetUser());
       dispatch(resetParty());
       dispatch(resetServer());
+      dispatch(resetMisc());
     });
   }
 
@@ -135,6 +143,11 @@ const WebSockets = () => {
        * If party playing, go to party
        */
       navigate("/game");
+    } else if (!lod_.isEmpty(state.party) && state.misc.canSeeTotalScore) {
+      /**
+       * If party is ended, go to scoreboard
+       */
+      navigate("/scoreboard");
     } else if (!lod_.isEmpty(state.party)) {
       /**
        * If party, go to party's room

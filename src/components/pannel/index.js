@@ -9,7 +9,7 @@ import { SocketContext } from "../../app/context/ws";
 import { useDispatch } from "react-redux";
 import { resetWs } from "../../app/redux/slices/ws.js";
 import { resetUser } from "../../app/redux/slices/user.js";
-import { resetParty } from "../../app/redux/slices/party.js";
+import { refreshParty, resetParty } from "../../app/redux/slices/party.js";
 import { resetServer } from "../../app/redux/slices/server.js";
 import { Chat as ComponentChat } from "../../components/chat";
 
@@ -21,6 +21,8 @@ import { useContext, useState } from "react";
 import { PrimaryButton, SpecialButton } from "../buttons";
 import { Chat, Link } from "@carbon/icons-react";
 import styled from "@emotion/styled";
+import { updateSeeTotalScore } from "app/redux/slices/misc";
+import { resetMisc } from "app/redux/slices/misc";
 
 library.add(faRightFromBracket);
 
@@ -402,6 +404,80 @@ const ResultsPannel = () => {
   );
 };
 
+const ScoreboardPannel = () => {
+  const [openChat, setOpenChat] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const { party, user } = useSelector((state) => state);
+  const socket = useContext(SocketContext);
+  const dispatch = useDispatch();
+  if (lod_.isEmpty(party)) return null;
+
+  return (
+    <div className="multiColumn">
+      <ComponentChat
+        openChat={openChat}
+        closeChat={() => setOpenChat(false)}
+        onClick={() => setOpenChat(true)}
+        noButton
+        newMessageHandle={() => {
+          setUnreadMessages((unreadMessages) => unreadMessages + 1);
+        }}
+      />
+      <div className="columnDivider">
+        <div>
+          {party.users?.map((user, index) => {
+            let userScore = party.score.find(
+              (score) => score.uuid === user.uuid
+            );
+            return (
+              <UserBox
+                key={index}
+                user={user}
+                secondLine={
+                  <div className="userScore">
+                    {userScore?.score ?? 0}
+                    <span className="pts">pts</span>
+                  </div>
+                }
+                isReady={user.ready}
+              />
+            );
+          })}
+        </div>
+
+        <div className="waitingButtonsContainer">
+          <PrimaryButton
+            value="Continuer"
+            style={{
+              flex: 1,
+              fontSize: "20px",
+              borderRadius: "15px",
+            }}
+            onClick={() => {
+              dispatch(updateSeeTotalScore(false));
+            }}
+          />
+          <StyledBadge badgeContent={unreadMessages} color="primary">
+            <SpecialButton
+              icon
+              variant="green"
+              value={<Chat width={24} height={24} />}
+              onClick={() => {
+                setUnreadMessages(0);
+                setOpenChat(true);
+              }}
+              style={{
+                marginLeft: "10px",
+                borderRadius: "15px",
+              }}
+            />
+          </StyledBadge>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Pannel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -422,6 +498,8 @@ export const Pannel = () => {
         return <GamePannel />;
       case "/results":
         return <ResultsPannel />;
+      case "/scoreboard":
+        return <ScoreboardPannel />;
       default:
         return null;
     }
@@ -432,6 +510,7 @@ export const Pannel = () => {
       case "/waiting":
       case "/game":
       case "/results":
+      case "/scoreboard":
         return `${party?.users?.length} Joueurs`;
       default:
         return `${onlineUsers} Joueurs en ligne`;
@@ -450,6 +529,7 @@ export const Pannel = () => {
                 dispatch(resetUser());
                 dispatch(resetParty());
                 dispatch(resetServer());
+                dispatch(resetMisc());
                 socket.emit("disconnected", { uuid: ws.uuid });
                 navigate("/");
               }}

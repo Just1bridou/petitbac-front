@@ -1,0 +1,124 @@
+@import "../../assets/styles/index.scss";
+
+.vote {
+  width: 1.5vw;
+  height: 1.5vw;
+  margin: 2px;
+  border-radius: 5px;
+}
+
+.table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.lineContent {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lineContentHeader {
+  flex: 1;
+  color: #938ba2;
+  padding-top: 5px;
+  font-family: "Raleway ExtraBold";
+}
+
+.lineContentCell {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  color: #ececec;
+  font-family: "Raleway ExtraBold";
+}
+
+.categorieTitle {
+  font-size: 25px;
+  margin: 0;
+  padding: 0;
+  margin-top: 7vh;
+  text-transform: uppercase;
+  color: #ececec;
+  font-family: "Raleway ExtraBold";
+}
+
+.tableHeader {
+  color: #d9d9d9;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-top: 5px solid #938ba2;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
+}
+
+.tableBody {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.voteGreen {
+  background: $fadeGreen;
+}
+
+.voteRed {
+  background: $fadeRed;
+}
+
+.gold {
+  // background-color: #d9be4c;
+  background: $fadeGreen;
+}
+
+.silver {
+  // background-color: #93949b;
+  background: $fadeGreen;
+}
+
+.copper {
+  // background-color: #c07a50;
+  background: $fadeGreen;
+}
+
+.bronze {
+  // background-color: #a67d5d;
+  background: $fadeRed;
+}
+
+.resultsLinesContainer {
+  display: flex;
+  margin-top: 30px;
+  align-items: center;
+}
+
+.resultLine {
+  margin-left: 20px;
+  flex: 1;
+  padding: 20px 30px;
+  border-radius: 100px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.resultLineName {
+  font-family: "Raleway Medium";
+  font-size: 40px;
+}
+
+.resultLineScore {
+  font-family: "Raleway Black";
+  font-size: 40px;
+}
+
+.resultLineScoreLabel {
+  font-family: "Raleway Medium";
+  font-size: 20px;
+  margin-left: 10px;
+  color: #ececec;
+}

@@ -43,7 +43,6 @@ export const Game = () => {
    */
   socket.removeListener("stopGame");
   socket.on("stopGame", () => {
-    console.log("stop game !!");
     setDisabled(true);
     socket.emit("savePartyWords", {
       uuid: user.uuid,
