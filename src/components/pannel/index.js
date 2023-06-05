@@ -143,7 +143,7 @@ const WaitingPannel = () => {
         }}
       />
       <div className="columnDivider">
-        <div>
+        <div className="usersContainerBox">
           {party.users?.map((user, index) => {
             let icon = null;
 
@@ -273,7 +273,7 @@ const GamePannel = () => {
         }}
       />
       <div className="columnDivider">
-        <div>
+        <div className="usersContainerBox">
           {party.users?.map((user, index) => {
             let userScore = party.score.find(
               (score) => score.uuid === user.uuid
@@ -347,7 +347,7 @@ const ResultsPannel = () => {
         }}
       />
       <div className="columnDivider">
-        <div>
+        <div className="usersContainerBox">
           {party.users?.map((user, index) => {
             let userScore = party.score.find(
               (score) => score.uuid === user.uuid
@@ -424,7 +424,7 @@ const ScoreboardPannel = () => {
         }}
       />
       <div className="columnDivider">
-        <div>
+        <div className="usersContainerBox">
           {party.users?.map((user, index) => {
             let userScore = party.score.find(
               (score) => score.uuid === user.uuid

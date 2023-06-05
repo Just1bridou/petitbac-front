@@ -46,6 +46,10 @@ export const Results = () => {
   const socket = useContext(SocketContext);
   const [openChat, setOpenChat] = useState(false);
 
+  const isValidateStorage = Boolean(window.localStorage.getItem("noticeOpen"));
+
+  const [isValidate, setIsValidate] = useState(isValidateStorage);
+
   return (
     <Layout
       horizontalAlign="start"
@@ -109,7 +113,6 @@ export const Results = () => {
                   let voteLessThanFifty =
                     actualAnswer.votes.filter((v) => v.vote).length <
                     party.users.length / 2;
-
                   return (
                     <div
                       className="lineContent tableBody"
@@ -123,26 +126,53 @@ export const Results = () => {
                       <div className="lineContentCell">{userRow?.pseudo}</div>
                       <div className="lineContentCell">{actualAnswer.word}</div>
                       <div className="lineContentCell">
-                        <VoteBlock
-                          style={{
-                            cursor: "pointer",
-                          }}
-                          vote={
-                            actualAnswer.votes.find((v) => v.uuid === user.uuid)
-                              ?.vote
+                        <Tooltip
+                          placement="top"
+                          title={
+                            index === 0
+                              ? "Cliquer sur les cases pour valider ou non un mot"
+                              : ""
                           }
-                          onClick={() => {
-                            socket.emit("changeVote", {
-                              uuid: user.uuid,
-                              answerUUID: answer.uuid,
-                              partyUUID: party.uuid,
-                              wordIndex: index,
-                              vote: !actualAnswer.votes.find(
-                                (v) => v.uuid === user.uuid
-                              )?.vote,
-                            });
+                          arrow
+                          open={!isValidate}
+                          componentsProps={{
+                            tooltip: {
+                              style: {
+                                fontSize: "20px",
+                                fontFamily: "Raleway Light",
+                              },
+                            },
                           }}
-                        />
+                          onMouseLeave={() => {
+                            window.localStorage.setItem("noticeOpen", true);
+                            // setNoticeOpen(false);
+                            setIsValidate(true);
+                          }}
+                        >
+                          <div>
+                            <VoteBlock
+                              style={{
+                                cursor: "pointer",
+                              }}
+                              vote={
+                                actualAnswer.votes.find(
+                                  (v) => v.uuid === user.uuid
+                                )?.vote
+                              }
+                              onClick={() => {
+                                socket.emit("changeVote", {
+                                  uuid: user.uuid,
+                                  answerUUID: answer.uuid,
+                                  partyUUID: party.uuid,
+                                  wordIndex: index,
+                                  vote: !actualAnswer.votes.find(
+                                    (v) => v.uuid === user.uuid
+                                  )?.vote,
+                                });
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
                       </div>
                       <div
                         className="lineContentCell"
