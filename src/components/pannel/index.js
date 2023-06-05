@@ -16,13 +16,14 @@ import { Chat as ComponentChat } from "../../components/chat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faRightFromBracket, faCrown } from "@fortawesome/free-solid-svg-icons";
-import { Badge, IconButton, Tooltip } from "@mui/material";
+import { Badge, Button, IconButton, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
 import { PrimaryButton, SpecialButton } from "../buttons";
 import { Chat, Link } from "@carbon/icons-react";
 import styled from "@emotion/styled";
 import { updateSeeTotalScore } from "app/redux/slices/misc";
 import { resetMisc } from "app/redux/slices/misc";
+import { StopWatch } from "components/StopWatch";
 
 library.add(faRightFromBracket);
 
@@ -65,6 +66,44 @@ const UserBox = ({ user, icon, isReady, secondLine = null }) => {
         </div>
       </div>
     </Tooltip>
+  );
+};
+
+const FlashPannel = () => {
+  const { flash } = useSelector((state) => state);
+  return (
+    <div className="flash_multiColumn">
+      <div className="flash_columnCell">
+        <div className="flash_columnCellTitle">Temps</div>
+        <div className="flash_columnCellValue">00:12:45</div>
+        <StopWatch />
+      </div>
+
+      <div className="flash_columnCell">
+        <div className="flash_columnCellTitle">Score</div>
+        <div className="flash_columnCellValue">{flash.actualScore}</div>
+      </div>
+
+      <div className="flash_columnCell">
+        <div className="flash_columnCellTitle">Réussite</div>
+        <div className="flash_columnCellValue">60%</div>
+      </div>
+    </div>
+  );
+};
+
+const LoginPannel = () => {
+  const socket = useContext(SocketContext);
+  const navigate = useNavigate();
+
+  function goToFlash() {
+    navigate("/flash");
+  }
+
+  return (
+    <div className="multiColumn">
+      <Button onClick={goToFlash}>Mode flash</Button>
+    </div>
   );
 };
 
@@ -490,6 +529,8 @@ export const Pannel = () => {
 
   function switchPathName() {
     switch (pathname) {
+      case "/login":
+        return <LoginPannel />;
       case "/lobby":
         return <LobbyPannel />;
       case "/waiting":
@@ -500,6 +541,8 @@ export const Pannel = () => {
         return <ResultsPannel />;
       case "/scoreboard":
         return <ScoreboardPannel />;
+      case "/flash":
+        return <FlashPannel />;
       default:
         return null;
     }
@@ -512,6 +555,8 @@ export const Pannel = () => {
       case "/results":
       case "/scoreboard":
         return `${party?.users?.length} Joueurs`;
+      case "/flash":
+        return "";
       default:
         return `${onlineUsers} Joueurs en ligne`;
     }
@@ -538,6 +583,8 @@ export const Pannel = () => {
             </IconButton>
           </Tooltip>
         );
+      case "/flash":
+        return null;
       default:
         return (
           <Tooltip placement="left" title="Quitter">

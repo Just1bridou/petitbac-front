@@ -1,0 +1,8 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#540557",
+    "titleBar.activeBackground": "#750779",
+    "titleBar.activeForeground": "#FFFAFF"
+  },
+  "discord.enabled": true
+}

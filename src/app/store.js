@@ -7,6 +7,8 @@ import persistCombineReducers from "redux-persist/es/persistCombineReducers";
 import partySlice from "./redux/slices/party";
 import serverSlice from "./redux/slices/server";
 import miscSlice from "./redux/slices/misc";
+import flashSlice from "./redux/slices/flash";
+import snackBarSlice from "./redux/slices/snackBar";
 
 const persistConfig = {
   key: "root",
@@ -19,6 +21,8 @@ const persistedReducer = persistCombineReducers(persistConfig, {
   party: partySlice,
   server: serverSlice,
   misc: miscSlice,
+  flash: flashSlice,
+  snackBar: snackBarSlice,
 });
 
 export const store = configureStore({

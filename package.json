@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "private": true,
   "dependencies": {
+    "@benestudioco/react-scrollfade": "^1.0.2",
     "@carbon/icons-react": "^11.17.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",

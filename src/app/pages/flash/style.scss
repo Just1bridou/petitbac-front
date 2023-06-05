@@ -1,0 +1,139 @@
+@import "../../assets/styles/index.scss";
+
+.flash_gameContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin-top: 10vh;
+}
+
+.flash_score {
+  color: #ececec;
+  font-family: "Raleway Bold";
+  font-size: 30px;
+}
+
+.flash_inputContent {
+  display: flex;
+  flex-direction: column;
+  //   justify-content: center;
+  //   align-items: center;
+  width: 100%;
+}
+
+.flash_buttonsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flash_historyContainer {
+  max-height: 37vh;
+  overflow-y: auto;
+}
+
+.flash_historyWordsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.flash_historyWordsContainer:hover {
+  background: #222249;
+  border-radius: 20px;
+}
+
+.flash_historyWordsWord {
+  color: #ececec;
+  font-family: "Raleway Medium";
+  font-size: 20px;
+  margin: 5px;
+}
+
+.flash_historyWordsTheme {
+  color: #ececec;
+  font-family: "Raleway Bold";
+  font-size: 20px;
+  margin: 5px;
+}
+
+.flash_negativeScore {
+  color: #ff0000;
+  font-family: "Raleway Bold";
+  font-size: 20px;
+  margin: 5px;
+}
+
+.flash_positiveScore {
+  color: #00ff00;
+  font-family: "Raleway Bold";
+  font-size: 20px;
+  margin: 5px;
+}
+
+.flash_endGame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10vh;
+}
+
+.flash_endGameTitle {
+  color: #ececec;
+  font-family: "Raleway Bold";
+  font-size: 30px;
+}
+
+.flash_endGameScore {
+  color: #ececec;
+  font-family: "Raleway Bold";
+  font-size: 20px;
+}
+
+.flash_reportHistoryContainer {
+  display: flex;
+  align-items: center;
+}
+
+.flash_reportHistoryButton {
+  margin-left: 10px;
+}
+
+.flash_resultsList {
+  text-align: left;
+}
+
+.flash_resultCell {
+  color: #ececec;
+  font-family: "Raleway Medium";
+  font-size: 20px;
+}
+
+.flash_multiColumn {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.flash_columnCell {
+  margin-bottom: 5vh;
+}
+
+.flash_columnCellTitle {
+  color: #ececec;
+  font-family: "Raleway ExtraBold";
+  font-size: 20px;
+  text-align: left;
+}
+
+.flash_columnCellValue {
+  color: #ececec;
+  font-family: "Raleway Medium";
+  font-size: 15px;
+  text-align: left;
+  margin-top: 5px;
+}

@@ -12,6 +12,8 @@ import { Game } from "./app/pages/game";
 import { Results } from "./app/pages/results";
 import { Background } from "./components/Background";
 import { FinalScore } from "app/pages/finalScore";
+import { FlashPage } from "app/pages/flash";
+import SnackBarMessage from "components/SnackBar";
 const Home = () => {
   return (
     <section>
@@ -43,6 +45,7 @@ function App() {
     <Background>
       <BrowserRouter>
         <SocketContext.Provider value={socket}>
+          <SnackBarMessage />
           <WebSockets></WebSockets>
           <Routes>
             <Route exact path="*" element={<Home />} />
@@ -53,6 +56,8 @@ function App() {
             <Route exact path="/results" element={<Results />} />
             <Route exact path="/scoreboard" element={<FinalScore />} />
             <Route exact path="/r/:id" element={<JoinPage />} />
+            {/* Game mode */}
+            <Route exact path="/flash" element={<FlashPage />} />
           </Routes>
         </SocketContext.Provider>
       </BrowserRouter>

@@ -123,7 +123,7 @@ const WebSockets = () => {
     }
   }, [ws]);
 
-  const ALLOWED_PATH = ["/r/"];
+  const ALLOWED_PATH = ["/r/", "/flash"];
   let path = window.location.pathname;
 
   let isPathAllowed = ALLOWED_PATH.map((p) => path.includes(p)).includes(true);
