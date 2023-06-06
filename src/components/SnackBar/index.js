@@ -1,6 +1,5 @@
 import { hide } from "app/redux/slices/snackBar";
 const { Snackbar, Alert, Box } = require("@mui/material");
-const { useState } = require("react");
 const { useDispatch, useSelector } = require("react-redux");
 
 const SnackBarMessage = () => {

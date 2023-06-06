@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useRef, useEffect } from "react";
 
-export const StopWatch = () => {
+export const StopWatch = ({ start, end }) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -8,8 +9,8 @@ export const StopWatch = () => {
   const handleStart = () => {
     if (!isRunning) {
       intervalRef.current = setInterval(() => {
-        setTime((prevTime) => prevTime + 10);
-      }, 10);
+        setTime((prevTime) => prevTime + 1000);
+      }, 1000);
       setIsRunning(true);
     }
   };
@@ -19,28 +20,30 @@ export const StopWatch = () => {
     setIsRunning(false);
   };
 
-  const handleReset = () => {
-    clearInterval(intervalRef.current);
-    setIsRunning(false);
-    setTime(0);
-  };
-
   const formatTime = (time) => {
     const date = new Date(time);
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-    const milliseconds = Math.floor(date.getMilliseconds() / 10)
-      .toString()
-      .padStart(2, '0');
-    return `${minutes}:${seconds}.${milliseconds}`;
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    return `${minutes}m ${seconds}s`;
   };
 
-  return (
-    <div>
-      <h1>{formatTime(time)}</h1>
-      <button onClick={handleStart}>Start</button>
-      <button onClick={handleStop}>Stop</button>
-      <button onClick={handleReset}>Reset</button>
-    </div>
-  );
-}
+  useEffect(() => {
+    if (start) {
+      let nowTS = end ? new Date(end).getTime() : new Date().getTime();
+      setTime(nowTS - new Date(start).getTime());
+    }
+
+    if (start && !isRunning && !end) {
+      clearInterval(intervalRef?.current);
+      setIsRunning(true);
+      handleStart();
+    }
+
+    if (end && isRunning) {
+      handleStop();
+      setIsRunning(false);
+    }
+  }, [start, end]);
+
+  return <span>{formatTime(time)}</span>;
+};

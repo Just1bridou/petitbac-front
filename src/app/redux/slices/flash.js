@@ -27,11 +27,19 @@ export const flashSlice = createSlice({
       return state;
     },
     updateFlashFinish: (state, payload) => {
-      state.finish = payload.payload;
+      let { finish, score, endDate, timePenalty } = payload.payload;
+      state.finish = finish;
+      state.endDate = endDate;
+      state.actualScore = score;
+      state.timePenalty = timePenalty;
       return state;
     },
     resetFlash: (state) => {
       return initialState;
+    },
+    startFlash: (state) => {
+      state.startDate = new Date();
+      return state;
     },
   },
 });
@@ -44,5 +52,6 @@ export const {
   updateFlashFinish,
   updateFlashIndex,
   resetFlash,
+  startFlash,
 } = flashSlice.actions;
 export default flashSlice.reducer;

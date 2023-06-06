@@ -6,8 +6,6 @@ import { Layout } from "components/layout";
 import Header from "components/header";
 import { Chat } from "components/chat";
 import { Tooltip } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook } from "@fortawesome/free-solid-svg-icons";
 import { SearchLocateMirror } from "@carbon/icons-react";
 
 const LetterContainer = ({ letter }) => {

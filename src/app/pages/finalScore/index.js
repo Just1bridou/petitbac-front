@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import "./style.scss";
-import { useContext, useEffect, useState } from "react";
-import { SocketContext } from "app/context/ws";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Layout } from "components/layout";
 import Header from "components/header";

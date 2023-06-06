@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-expressions */
 import "./style.scss";
 import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "app/context/ws";
@@ -5,45 +7,158 @@ import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "components/layout";
 import Header from "components/header";
 import { PrimaryInput } from "components/buttons";
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { PrimaryButton } from "components/buttons";
 import { SpecialButton } from "components/buttons";
 import { updateThemeWords } from "app/redux/slices/flash";
 import { createFlash } from "app/redux/slices/flash";
 import lod_ from "lodash";
-import { updateFlash } from "app/redux/slices/flash";
 import ScrollFade from "@benestudioco/react-scrollfade/dist/ScrollFade";
-import { WarningAlt } from "@carbon/icons-react";
+import { Share, WarningAlt } from "@carbon/icons-react";
 import { display } from "app/redux/slices/snackBar";
 import { updateFlashActualScore } from "app/redux/slices/flash";
 import { updateFlashFinish } from "app/redux/slices/flash";
 import { updateFlashIndex } from "app/redux/slices/flash";
+import { copyToClipboard } from "components/pannel";
+import { startFlash } from "app/redux/slices/flash";
+import { formatTime } from "components/pannel";
+import { resetFlash } from "app/redux/slices/flash";
 
 const EndGameResults = ({ flash }) => {
+  const dispatch = useDispatch();
+
+  const addIntSymbol = (number) => {
+    if (number >= 0) {
+      return `+${number}`;
+    } else {
+      return number;
+    }
+  };
+
+  const generateClipboardText = (flash) => {
+    let time = formatTime(
+      new Date(flash.endDate).getTime() - new Date(flash.startDate).getTime()
+    );
+
+    let text = `Petit Bac Flash ${new Date().toLocaleDateString()} : ${
+      flash.actualScore
+    } Pts. en ${time} 🎉\n\n`;
+    // text += "```";
+    for (let theme of flash.themes) {
+      let score = 0;
+
+      for (let word of theme.words) {
+        score += word.score;
+      }
+
+      let lastWord = theme.words[theme.words.length - 1];
+      let textWord = "";
+      if (lastWord.skiped) {
+        textWord = "⬛❌⬛";
+      } else {
+        textWord = "⬛✅⬛";
+      }
+
+      text += `${theme.emoji}${textWord} ${addIntSymbol(score)} Pts. ${
+        lastWord.skiped ? "(Thème passé)" : ""
+      }\n`;
+    }
+    // text += "```";
+    text += `\nEssaie de me battre sur https://${window.location.host}/flash`;
+    return text;
+  };
+
   return (
     <div className="flash_endGame">
-      <div className="flash_endGameTitle">Fin de la partie</div>
-      <div className="flash_endGameScore">{`Score : ${flash.actualScore}`}</div>
+      <div className="flash_endGameTitle">{`Fin de la partie 🎉`}</div>
+      <div className="flash_endGameSubTitle">{`Du ${new Date().toLocaleDateString()}`}</div>
       <div className="flash_resultsList">
-        {flash.themes.map((theme, index) => {
-          let score = 0;
-          let skipped = false;
+        <table
+          style={{
+            width: "100%",
+          }}
+        >
+          <thead>
+            <tr className="flash_tableHeader">
+              <th>Thème</th>
+              <th>Lettre</th>
+              <th>Dernier Mot</th>
+              <th>Points</th>
+              <th>Essais</th>
+            </tr>
+          </thead>
+          {flash.themes.map((theme, index) => {
+            let score = 0;
 
-          for (let word of theme.words) {
-            if (word.skiped) {
-              skipped = true;
+            for (let word of theme.words) {
+              score += word.score;
             }
-            score += word.score;
-          }
-          return (
-            <div className="flash_resultCell">
-              <span>{`${theme.label} en `}</span>
-              <span>{`${theme.letter} : `}</span>
-              <span>{`${score} points en `}</span>
-              <span>{`${theme.words.length} essai(s)`}</span>
-            </div>
-          );
-        })}
+
+            const formatWord = (word) => {
+              word = word.toLowerCase();
+              word = word.charAt(0).toUpperCase() + word.slice(1);
+              return word;
+            };
+
+            const getLastWord = (theme) => {
+              let lastWord = theme.words[theme.words.length - 1];
+
+              if (lastWord.skiped) {
+                return <td className="flash_skippedTable">Passé</td>;
+              }
+
+              return <td>{formatWord(lastWord.word)}</td>;
+            };
+
+            return (
+              <tbody key={index}>
+                <tr className="flash_resultCell">
+                  <td>{theme.label}</td>
+                  <td>{theme.letter}</td>
+                  {getLastWord(theme)}
+                  <td>{score}</td>
+                  <td>{`${theme.words.length} essais`}</td>
+                </tr>
+              </tbody>
+            );
+          })}
+        </table>
+      </div>
+      <div className="flash_shareResultContainer">
+        <div>
+          <SpecialButton
+            variant="pink"
+            value={
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Share />
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  Partager mon résultat !
+                </span>
+              </div>
+            }
+            onClick={() => {
+              copyToClipboard(generateClipboardText(flash));
+              dispatch(
+                display({
+                  message: "Résultat copié dans le presse-papier !",
+                  type: "success",
+                })
+              );
+            }}
+            style={{
+              fontSize: "20px",
+            }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -122,7 +237,7 @@ export const FlashPage = () => {
   const [gameIsFinish, setGameIsFinish] = useState(false);
 
   const startGame = () => {
-    setIsStarted(true);
+    getThemesList();
   };
 
   function getThemesList() {
@@ -142,7 +257,20 @@ export const FlashPage = () => {
           themes: data.themes,
         })
       );
+
+      if (!isStarted) {
+        setIsStarted(true);
+        dispatch(startFlash());
+      }
     });
+  }
+
+  function calculateFinalScore(baseScore, timeSpentInMilliseconds) {
+    const timePenaltyFactor = 0.05;
+    let timeSpentInSeconds = timeSpentInMilliseconds / 1000;
+    let timePenalty = Math.round(timeSpentInSeconds * timePenaltyFactor);
+    let finalScore = Math.round(baseScore - timePenalty);
+    return { finalScore, timePenalty };
   }
 
   function nextWord() {
@@ -151,8 +279,22 @@ export const FlashPage = () => {
       setIndex(nIndex);
       dispatch(updateFlashIndex(nIndex));
     } else {
+      // TODO
+      let end = new Date();
+      let { finalScore, timePenalty } = calculateFinalScore(
+        score,
+        end.getTime() - new Date(flash.startDate).getTime()
+      );
+      setScore(finalScore);
+      dispatch(
+        updateFlashFinish({
+          finish: true,
+          score: finalScore,
+          endDate: end,
+          timePenalty,
+        })
+      );
       setGameIsFinish(true);
-      dispatch(updateFlashFinish(true));
     }
   }
 
@@ -246,10 +388,15 @@ export const FlashPage = () => {
   }
 
   useEffect(() => {
-    if (lod_.isEmpty(flash)) {
-      getThemesList();
-    } else {
-      initState();
+    if (!lod_.isEmpty(flash)) {
+      let todayDate = new Date().toLocaleDateString();
+      let flashDate = new Date(flash.date).toLocaleDateString();
+
+      if (todayDate !== flashDate) {
+        dispatch(resetFlash());
+      } else {
+        initState();
+      }
     }
   }, []);
 
@@ -261,19 +408,31 @@ export const FlashPage = () => {
         margin: "10px 20px",
       }}
     >
-      <Header
-        title={`Party flash`}
-        attributes={<div className="flash_score">{`Score : ${score}`}</div>}
-      ></Header>
+      <Header backMenu title="Party Flash"></Header>
 
-      <div className="gameContent">
+      <div className="flash_gameContent">
         <div className="flash_gameContainer">
-          {/* Before game screen */}
           {!isStarted && !gameIsFinish && (
-            <Button onClick={startGame}>Commencer</Button>
+            <div>
+              <div className="flash_title">Mode Flash ⚡️</div>
+              <div className="flash_description">
+                <p>Nouveau mode de jeu !</p>
+                <p>Chaque jour une nouvelle grille de 10 thèmes à résoudre.</p>
+                <p>
+                  Soyer le plus rapide pour gagner un maximum de points ! 🏆
+                </p>
+                <p>Attention, chaque erreur vous fera perdre des points ! 😱</p>
+                <p>
+                  Si vous trouvez un mot qui est compté comme faux et qui n'est
+                  pas dans le dictionnaire, vous pouvez le signaler en cliquant
+                  sur le bouton <span>Signaler</span> en bas à droite du mot
+                  dans l'historique.
+                </p>
+              </div>
+            </div>
           )}
           {/* In game screen */}
-          {isStarted && !gameIsFinish && (
+          {isStarted && !gameIsFinish && flash.startDate && (
             <div className="flash_inputContent">
               <div className="wordCellCategorie">
                 {`${themesList[index].label} en`}&nbsp;
@@ -339,6 +498,21 @@ export const FlashPage = () => {
           {gameIsFinish && <EndGameResults flash={flash} />}
         </div>
       </div>
+      {/* Before game screen */}
+      {!isStarted && !gameIsFinish && (
+        <div className="createPrivateRoom">
+          <PrimaryButton
+            value="Commencer"
+            onClick={startGame}
+            style={{
+              width: "100%",
+              height: "8vh",
+              fontSize: "20px",
+              marginBottom: "1vh",
+            }}
+          />
+        </div>
+      )}
     </Layout>
   );
 };

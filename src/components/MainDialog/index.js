@@ -9,11 +9,25 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const MainDialog = () => {
-  const { ws } = useSelector((state) => state.ws);
-  const [open, setOpen] = useState(ws?.uuid ? false : true);
+  const navigate = useNavigate();
+
+  const actualVersion = "2";
+
+  let savedVersion = localStorage.getItem("isViewedInformations");
+
+  const [open, setOpen] = useState(Boolean(actualVersion === savedVersion));
+
+  function close() {
+    window.localStorage.setItem("isViewedInformations", actualVersion);
+    setOpen(false);
+  }
+
+  function goToFlash() {
+    navigate("/flash");
+  }
 
   return (
     <div>
@@ -24,19 +38,29 @@ export const MainDialog = () => {
         fullWidth
         maxWidth="md"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => close()}
       >
-        <DialogTitle className="mainDialogTitle">Informations</DialogTitle>
+        <DialogTitle className="mainDialogTitle">Informations 🎉</DialogTitle>
         <DialogContent>
-          <DialogContentText className="mainDialogText">
+          {/* <DialogContentText className="mainDialogText">
             Le site est en construction, il est donc possible que certaines
             pages ne fonctionnent pas correctement ou que certaines
             fonctionnalités ne soient pas accessibles.
+          </DialogContentText> */}
+          <DialogContentText className="mainDialogText">
+            <p>Nouveau mode de jeu Flash ⚡️!</p>
+            <p>
+              Chaque jour une nouvelle grille de 10 thèmes à résoudre. Soyer le
+              plus rapide pour gagner un maximum de points ! 🏆
+            </p>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button className="mainDialogButton" onClick={() => setOpen(false)}>
-            Accepter
+          <Button className="mainDialogButtonClose" onClick={() => close()}>
+            Fermer
+          </Button>
+          <Button className="mainDialogButton" onClick={() => goToFlash()}>
+            Découvrir
           </Button>
         </DialogActions>
       </Dialog>

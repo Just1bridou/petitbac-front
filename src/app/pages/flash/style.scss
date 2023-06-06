@@ -5,6 +5,8 @@
   justify-content: center;
   align-items: center;
   // margin-top: 10vh;
+  width: 100%;
+  margin-top: 7vh;
 }
 
 .flash_score {
@@ -74,17 +76,34 @@
 }
 
 .flash_endGame {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 10vh;
+  // margin-top: 10vh;
 }
 
 .flash_endGameTitle {
   color: #ececec;
   font-family: "Raleway Bold";
   font-size: 30px;
+}
+
+.flash_gameContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+}
+
+.flash_endGameSubTitle {
+  color: #ececec84;
+  font-family: "Raleway Medium";
+  font-size: 15px;
+  font-style: italic;
 }
 
 .flash_endGameScore {
@@ -103,7 +122,9 @@
 }
 
 .flash_resultsList {
+  margin-top: 5vh;
   text-align: left;
+  width: 100%;
 }
 
 .flash_resultCell {
@@ -130,10 +151,39 @@
   text-align: left;
 }
 
+.flash_tableHeader th {
+  color: #ececec;
+  font-family: "Raleway Black";
+  font-size: 20px;
+  text-align: left;
+  margin-top: 5px;
+}
+
 .flash_columnCellValue {
   color: #ececec;
   font-family: "Raleway Medium";
   font-size: 15px;
   text-align: left;
   margin-top: 5px;
+}
+
+.flash_skippedTable {
+  font-style: italic;
+  color: #949494aa;
+}
+
+.flash_shareResultContainer {
+  margin-top: 5vh;
+}
+
+.flash_title {
+  color: #ececec;
+  font-family: "Raleway Bold";
+  font-size: 30px;
+}
+
+.flash_description {
+  color: #ececec;
+  font-family: "Raleway Medium";
+  font-size: 20px;
 }
