@@ -18,7 +18,7 @@ export const MainDialog = () => {
 
   let savedVersion = localStorage.getItem("isViewedInformations");
 
-  const [open, setOpen] = useState(Boolean(actualVersion === savedVersion));
+  const [open, setOpen] = useState(!Boolean(actualVersion === savedVersion));
 
   function close() {
     window.localStorage.setItem("isViewedInformations", actualVersion);
