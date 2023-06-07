@@ -197,8 +197,8 @@ const FlashHistory = ({ reportError, themes }) => {
                       color="error"
                       onClick={() => {
                         reportError({
-                          theme: theme,
-                          // letter: actualLetter,
+                          theme: theme.theme,
+                          letter: theme.letter,
                           word: word.word,
                         });
                       }}
@@ -345,6 +345,8 @@ export const FlashPage = () => {
         })
       );
     };
+
+    if (!inputWord.trim()) return;
 
     socket.emit(
       "verifyGame",
