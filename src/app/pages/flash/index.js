@@ -346,14 +346,14 @@ export const FlashPage = () => {
       );
     };
 
-    if (!inputWord.trim()) return;
+    if (!inputWord?.trim()) return;
 
     socket.emit(
       "verifyGame",
       {
         theme: themesList[index].theme,
         letter: themesList[index].letter,
-        word: inputWord,
+        word: inputWord.trim(),
       },
       (res) => {
         if (res.finded) {
