@@ -45,7 +45,14 @@ export const PrimaryButton = ({ value, onClick, ...rest }) => {
   );
 };
 
-export const SpecialButton = ({ value, onClick, variant, icon, ...rest }) => {
+export const SpecialButton = ({
+  value,
+  onClick,
+  variant,
+  icon,
+  startIcon,
+  ...rest
+}) => {
   const [play] = useSound(pop);
 
   function handleClick() {
@@ -75,6 +82,7 @@ export const SpecialButton = ({ value, onClick, variant, icon, ...rest }) => {
       className={`${variantClass} button special-button`}
       {...rest}
     >
+      {startIcon ? <span>{startIcon}&nbsp;</span> : null}
       {value}
     </button>
   );
