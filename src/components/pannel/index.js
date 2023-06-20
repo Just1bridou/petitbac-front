@@ -115,7 +115,7 @@ const FlashPannel = () => {
     }
 
     let reussite = score / flash.themes.length;
-    return reussite;
+    return Math.round(reussite);
   };
 
   if (lod_.isEmpty(flash)) return null;
