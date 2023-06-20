@@ -7,14 +7,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "components/layout";
 import Header from "components/header";
 import { PrimaryInput } from "components/buttons";
-import { IconButton, Tooltip } from "@mui/material";
+import { Button, LinearProgress, Tooltip } from "@mui/material";
 import { PrimaryButton } from "components/buttons";
 import { SpecialButton } from "components/buttons";
 import { updateThemeWords } from "app/redux/slices/flash";
 import { createFlash } from "app/redux/slices/flash";
 import lod_ from "lodash";
 import ScrollFade from "@benestudioco/react-scrollfade/dist/ScrollFade";
-import { Share, WarningAlt } from "@carbon/icons-react";
+import {
+  Checkmark,
+  ChevronDown,
+  Share,
+  SkipForward,
+  WarningAlt,
+} from "@carbon/icons-react";
 import { display } from "app/redux/slices/snackBar";
 import { updateFlashActualScore } from "app/redux/slices/flash";
 import { updateFlashFinish } from "app/redux/slices/flash";
@@ -23,6 +29,56 @@ import { copyToClipboard } from "components/pannel";
 import { startFlash } from "app/redux/slices/flash";
 import { formatTime } from "components/pannel";
 import { resetFlash } from "app/redux/slices/flash";
+import { ChevronRight } from "@carbon/icons-react";
+
+const ResultRow = ({ theme, getLastWord, score }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <tr className="flash_resultCell pointer" onClick={() => setOpen(!open)}>
+        <td>
+          {open ? (
+            <ChevronDown width={15} height={15} />
+          ) : (
+            <ChevronRight width={15} height={15} />
+          )}
+        </td>
+        <td>{theme.label}</td>
+        <td>{theme.letter}</td>
+        {getLastWord(theme)}
+        <td>{score}</td>
+        <td>{`${theme.words.length} essais`}</td>
+      </tr>
+      <tr
+        className={`flash_resultDetails ${open ? "" : "flash_resultRowHidden"}`}
+      >
+        <td></td>
+        <td colSpan="5" className="flash_resultCellDetails">
+          <table>
+            <thead>
+              <tr>
+                <th>Mot</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              {theme.words.map((word, index) => {
+                let skp = word.skiped;
+                return (
+                  <tr>
+                    <td>{`${skp ? "Thème passé" : word.word}`}</td>
+                    <td>{`${word.score} pts.`}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </>
+  );
+};
 
 const EndGameResults = ({ flash }) => {
   const dispatch = useDispatch();
@@ -80,6 +136,7 @@ const EndGameResults = ({ flash }) => {
         >
           <thead>
             <tr className="flash_tableHeader">
+              <th></th>
               <th>Thème</th>
               <th>Lettre</th>
               <th>Dernier Mot</th>
@@ -87,41 +144,40 @@ const EndGameResults = ({ flash }) => {
               <th>Essais</th>
             </tr>
           </thead>
-          {flash.themes.map((theme, index) => {
-            let score = 0;
+          <tbody>
+            {flash.themes.map((theme, index) => {
+              let score = 0;
 
-            for (let word of theme.words) {
-              score += word.score;
-            }
-
-            const formatWord = (word) => {
-              word = word.toLowerCase();
-              word = word.charAt(0).toUpperCase() + word.slice(1);
-              return word;
-            };
-
-            const getLastWord = (theme) => {
-              let lastWord = theme.words[theme.words.length - 1];
-
-              if (lastWord.skiped) {
-                return <td className="flash_skippedTable">Passé</td>;
+              for (let word of theme.words) {
+                score += word.score;
               }
 
-              return <td>{formatWord(lastWord.word)}</td>;
-            };
+              const formatWord = (word) => {
+                word = word.toLowerCase();
+                word = word.charAt(0).toUpperCase() + word.slice(1);
+                return word;
+              };
 
-            return (
-              <tbody key={index}>
-                <tr className="flash_resultCell">
-                  <td>{theme.label}</td>
-                  <td>{theme.letter}</td>
-                  {getLastWord(theme)}
-                  <td>{score}</td>
-                  <td>{`${theme.words.length} essais`}</td>
-                </tr>
-              </tbody>
-            );
-          })}
+              const getLastWord = (theme) => {
+                let lastWord = theme.words[theme.words.length - 1];
+
+                if (lastWord.skiped) {
+                  return <td className="flash_skippedTable">Passé</td>;
+                }
+
+                return <td>{formatWord(lastWord.word)}</td>;
+              };
+
+              return (
+                <ResultRow
+                  key={index}
+                  theme={theme}
+                  getLastWord={getLastWord}
+                  score={score}
+                />
+              );
+            })}
+          </tbody>
         </table>
       </div>
       <div className="flash_shareResultContainer">
@@ -169,13 +225,19 @@ const FlashHistory = ({ reportError, themes }) => {
   return reverseThemes.map((theme) => {
     let reverseWords = [...theme.words].reverse();
     return reverseWords.map((word, index) => {
+      let err = !word.finded;
+      let skp = Boolean(word.skiped);
       return (
         <div key={index}>
           <div className="flash_historyWordsContainer">
             <div>
               <span className="flash_historyWordsTheme">{`${theme.label} :`}</span>
               <span className="flash_historyWordsWord">
-                {word.word ?? "Skiped"}
+                {word.word ? (
+                  <span>{word.word}</span>
+                ) : (
+                  <span className="flash_rowSkipedWord">Thème passé</span>
+                )}
               </span>
             </div>
             <span
@@ -184,29 +246,58 @@ const FlashHistory = ({ reportError, themes }) => {
               }`}
             >
               <div className="flash_reportHistoryContainer">
-                <span>{word.score}</span>
-                <span className="flash_reportHistoryButton">
-                  <Tooltip
-                    hidden={word.skiped}
-                    title="Signaler une erreur"
-                    placement="top"
-                    arrow
-                  >
-                    <IconButton
-                      disabled={word.skiped}
-                      color="error"
-                      onClick={() => {
-                        reportError({
-                          theme: theme.theme,
-                          letter: theme.letter,
-                          word: word.word,
-                        });
-                      }}
+                <span>{`${word.score}`}</span>
+                {skp && (
+                  <span className="flash_reportHistoryButton">
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="warning"
+                      startIcon={<SkipForward width={15} height={15} />}
                     >
-                      <WarningAlt width={24} height={24} />
-                    </IconButton>
-                  </Tooltip>
-                </span>
+                      Passé
+                    </Button>
+                  </span>
+                )}
+                {err && !skp && (
+                  <span className="flash_reportHistoryButton">
+                    <Tooltip
+                      hidden={word.skiped}
+                      title="Signaler une erreur"
+                      placement="top"
+                      arrow
+                    >
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        startIcon={<WarningAlt width={15} height={15} />}
+                        onClick={() => {
+                          reportError({
+                            theme: theme.theme,
+                            letter: theme.letter,
+                            word: word.word,
+                          });
+                        }}
+                      >
+                        Signaler
+                      </Button>
+                    </Tooltip>
+                  </span>
+                )}
+
+                {!skp && !err && (
+                  <span className="flash_reportHistoryButton">
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="success"
+                      startIcon={<Checkmark width={15} height={15} />}
+                    >
+                      Valide
+                    </Button>
+                  </span>
+                )}
               </div>
             </span>
           </div>
@@ -266,14 +357,14 @@ export const FlashPage = () => {
   }
 
   function calculateFinalScore(baseScore, timeSpentInMilliseconds) {
-    const timePenaltyFactor = 0.05;
+    const timePenaltyFactor = 0.1;
     let timeSpentInSeconds = timeSpentInMilliseconds / 1000;
     let timePenalty = Math.round(timeSpentInSeconds * timePenaltyFactor);
     let finalScore = Math.round(baseScore - timePenalty);
     return { finalScore, timePenalty };
   }
 
-  function nextWord() {
+  function nextWord(updatedScore = null) {
     if (index < maxIndex) {
       let nIndex = index + 1;
       setIndex(nIndex);
@@ -282,7 +373,7 @@ export const FlashPage = () => {
       // TODO
       let end = new Date();
       let { finalScore, timePenalty } = calculateFinalScore(
-        score,
+        updatedScore || score,
         end.getTime() - new Date(flash.startDate).getTime()
       );
       setScore(finalScore);
@@ -299,9 +390,6 @@ export const FlashPage = () => {
   }
 
   function skipWord() {
-    setInputWord("");
-    nextWord();
-
     let updatedScore = score - 20;
     setScore(updatedScore);
     dispatch(updateFlashActualScore(updatedScore));
@@ -322,6 +410,8 @@ export const FlashPage = () => {
         skiped: true,
       })
     );
+    setInputWord("");
+    nextWord(updatedScore);
   }
 
   function validate() {
@@ -358,8 +448,8 @@ export const FlashPage = () => {
       (res) => {
         if (res.finded) {
           setInputWord("");
-          nextWord();
           updateScore(50 + res.score, true);
+          nextWord();
         } else {
           setInputWord("");
           updateScore(-15, false);
@@ -424,6 +514,12 @@ export const FlashPage = () => {
                   Soyer le plus rapide pour gagner un maximum de points ! 🏆
                 </p>
                 <p>Attention, chaque erreur vous fera perdre des points ! 😱</p>
+
+                <p>
+                  Les points sont calculés avec la méthode du scrabble.
+                  <br /> Plus le mot utilise des lettres rares, plus il rapporte
+                  de points. 🚀
+                </p>
                 <p>
                   Si vous trouvez un mot qui est compté comme faux et qui n'est
                   pas dans le dictionnaire, vous pouvez le signaler en cliquant
@@ -437,8 +533,41 @@ export const FlashPage = () => {
           {isStarted && !gameIsFinish && flash.startDate && (
             <div className="flash_inputContent">
               <div className="wordCellCategorie">
-                {`${themesList[index].label} en`}&nbsp;
-                <span>{themesList[index].letter}</span>
+                <div className="flash_themeHeader">
+                  <div
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    <span className="flash_themeMaj">{`${themesList[index].emoji} ${themesList[index].label}`}</span>
+                    &nbsp;
+                    <span className="flash_themeMin">en</span>
+                    &nbsp;
+                    <span className="flash_themeMaj">
+                      {themesList[index].letter}
+                    </span>
+                  </div>
+                  <div className="flash_progressGame">
+                    <div className="flash_progressGameText">{`Thème ${
+                      index + 1
+                    } / ${themesList.length}`}</div>
+                    <div>
+                      <LinearProgress
+                        className="flash_progressGameBar"
+                        variant="determinate"
+                        value={(index + 1) * 10}
+                        sx={{
+                          height: "0.75rem",
+                          backgroundColor: "#222249",
+                          "& .MuiLinearProgress-bar": {
+                            // backgroundColor: "#2D3FDD",
+                            background: `linear-gradient(171.51deg, #b6bbee 0%, #2D3FDD 99.2%)`,
+                          },
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
               <PrimaryInput
                 value={inputWord}
