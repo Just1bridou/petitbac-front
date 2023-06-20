@@ -33,4 +33,11 @@ $menuBackgroundBlur: blur(1px);
 body {
   background: $backgroundGradient;
   min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Pour les navigateurs basés sur WebKit (comme Safari) */
+/* Supprime les barres de défilement */
+body::-webkit-scrollbar {
+  display: none;
 }
