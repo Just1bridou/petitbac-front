@@ -6,6 +6,7 @@ import { Layout } from "components/layout";
 import Header from "components/header";
 import { PrimaryInput } from "components/buttons";
 import { Chat } from "components/chat";
+import ScrollFade from "@benestudioco/react-scrollfade/dist/ScrollFade";
 
 const LetterContainer = ({ letter }) => {
   return (
@@ -82,6 +83,7 @@ export const Game = () => {
       ></Header>
 
       <div className="gameContent">
+        <ScrollFade />
         <div className="gameContainer">
           {party.words?.map((word, index) => {
             return (
