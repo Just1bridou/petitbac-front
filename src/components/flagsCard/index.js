@@ -10,7 +10,7 @@ export const FlagsCard = ({ title, value, setValue }) => {
         <div className="flagsCardDescription">
           {flags.map((flag, index) => {
             return (
-              <div className="flagContainer">
+              <div className="flagContainer" key={index}>
                 <Flag
                   className="flag"
                   key={index}

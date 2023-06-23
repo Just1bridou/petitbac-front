@@ -59,35 +59,35 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const UserBox = ({ user, icon, isReady, secondLine = null }) => {
   return (
-    <Tooltip placement="top" title={user.pseudo}>
-      <div className="userBox">
-        <div
-          className="userBoxAvatar"
-          style={{
-            backgroundColor: isReady ? "#36a10d" : "",
-          }}
-        >
-          {user?.pseudo[0]?.toUpperCase()}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
-
-            marginLeft: "1vw",
-            flex: 1,
-          }}
-        >
-          <div className="userBoxNameContainer">
-            <div className="userBoxName">{user.pseudo}</div>
-            <div className="userBoxIcon">{icon}</div>
-          </div>
-          {secondLine}
-        </div>
+    // <Tooltip placement="top" title={user.pseudo}>
+    <div className="userBox">
+      <div
+        className="userBoxAvatar"
+        style={{
+          backgroundColor: isReady ? "#36a10d" : "",
+        }}
+      >
+        {user?.pseudo[0]?.toUpperCase()}
       </div>
-    </Tooltip>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+
+          marginLeft: "1vw",
+          flex: 1,
+        }}
+      >
+        <div className="userBoxNameContainer">
+          <div className="userBoxName">{user.pseudo}</div>
+          <div className="userBoxIcon">{icon}</div>
+        </div>
+        {secondLine}
+      </div>
+    </div>
+    // </Tooltip>
   );
 };
 

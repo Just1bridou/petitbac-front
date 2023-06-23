@@ -1,7 +1,7 @@
 import "./style.scss";
 import { useContext, useState } from "react";
 import { SocketContext } from "app/context/ws";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "components/layout";
 import { PrimaryInput, SpecialButton } from "components/buttons";
 import { Title } from "components/titles";
@@ -12,6 +12,7 @@ import { SwitchTimer } from "components/switchTimer";
 import { RoundsInput } from "components/roundsInput";
 import { FlagsCard } from "components/flagsCard";
 import { Send, Close } from "@carbon/icons-react";
+import { display } from "app/redux/slices/snackBar";
 
 const ActionIconButton = ({ icon, onClick }) => {
   return (
@@ -23,13 +24,27 @@ const ActionIconButton = ({ icon, onClick }) => {
 };
 
 export const Waiting = () => {
+  const dispatch = useDispatch();
   const { party, user } = useSelector((state) => state);
   const socket = useContext(SocketContext);
   const [inputWord, setInputWord] = useState("");
 
+  function cannotDoAction() {
+    dispatch(
+      display({
+        message:
+          "Impossible d'effectuer cette action, vous n'êtes pas administrateur.",
+        type: "info",
+      })
+    );
+  }
+
   function addNewWord() {
     if (!inputWord.trim()) return;
-    if (!user.admin) return;
+    if (!user.admin) {
+      cannotDoAction();
+      return;
+    }
     socket.timeout(5000).emit(
       "addPartyWord",
       {
@@ -46,7 +61,10 @@ export const Waiting = () => {
   }
 
   function removePartyWord(word) {
-    if (!user.admin) return;
+    if (!user.admin) {
+      cannotDoAction();
+      return;
+    }
     socket.timeout(5000).emit(
       "removePartyWord",
       {
@@ -159,7 +177,10 @@ export const Waiting = () => {
             ]}
             selected={party?.mode}
             onClick={(mode) => {
-              if (!user.admin) return;
+              if (!user.admin) {
+                cannotDoAction();
+                return;
+              }
               socket.timeout(5000).emit(
                 "changePartyMode",
                 {
@@ -186,7 +207,10 @@ export const Waiting = () => {
             items={["30", "60", "90"]}
             value={party?.time}
             setValue={(time) => {
-              if (!user.admin) return;
+              if (!user.admin) {
+                cannotDoAction();
+                return;
+              }
               socket.timeout(5000).emit(
                 "changePartyTime",
                 {
@@ -205,7 +229,10 @@ export const Waiting = () => {
             title="Manches"
             value={party?.rounds}
             setValue={(rounds) => {
-              if (!user.admin) return;
+              if (!user.admin) {
+                cannotDoAction();
+                return;
+              }
               socket.timeout(5000).emit(
                 "changePartyRounds",
                 {
@@ -224,7 +251,10 @@ export const Waiting = () => {
             title="Langage"
             value={party.language}
             setValue={(flag) => {
-              if (!user.admin) return;
+              if (!user.admin) {
+                cannotDoAction();
+                return;
+              }
               socket.timeout(5000).emit(
                 "changePartyLanguage",
                 {
@@ -244,7 +274,10 @@ export const Waiting = () => {
             description="Si votre partie est publie, n'importe qui pourra la rejoindre."
             value={party?.visibility === "public"}
             setValue={(isPublic) => {
-              if (!user.admin) return;
+              if (!user.admin) {
+                cannotDoAction();
+                return;
+              }
               socket.timeout(5000).emit(
                 "changePartyVisibility",
                 {
