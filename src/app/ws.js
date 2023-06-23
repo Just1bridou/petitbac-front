@@ -29,7 +29,13 @@ const WebSockets = () => {
     /**
      * Send the uuid to the server
      */
-    socket.emit("saveUser", { uuid: userUUID });
+    socket
+      .timeout(5000)
+      .emit("saveUser", { uuid: userUUID }, (err, response) => {
+        if (err) {
+          console.log(`socket error: saveUser: ${err}`);
+        }
+      });
   }
 
   function initMainThread() {
@@ -45,55 +51,80 @@ const WebSockets = () => {
     /**
      * Used to change the page
      */
-    socket.on("changePage", ({ page }) => {
+    socket.on("changePage", ({ page }, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       navigate(`/${page}`);
     });
     /**
      * Refresh user's data
      */
-    socket.on("refreshUser", ({ user }) => {
+    socket.on("refreshUser", ({ user }, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(refresh({ user }));
     });
     /**
      * Update online users
      */
-    socket.on("updateOnlineUsers", ({ onlineUsers }) => {
+    socket.on("updateOnlineUsers", ({ onlineUsers }, callback) => {
       dispatch(updateUser({ onlineUsers }));
+      callback({ status: 200 });
     });
     /**
      * Update online parties
      */
-    socket.on("updateOnlineParties", ({ parties }) => {
+    socket.on("updateOnlineParties", ({ parties }, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(updateParties({ parties }));
     });
     /**
      * Update party's data
      */
-    socket.on("updateParty", ({ party }) => {
+    socket.on("updateParty", ({ party }, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(refreshParty({ party }));
     });
     /**
      * When user is kicked from the party
      */
-    socket.on("kickParty", () => {
+    socket.on("kickParty", (data, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(resetParty());
     });
     /**
      * When party start
      */
-    socket.on("startGame", (party) => {
+    socket.on("startGame", (party, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(refreshParty({ party }));
     });
     /**
      * When party stop
      */
-    socket.on("viewResults", (party) => {
+    socket.on("viewResults", (party, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(refreshParty({ party }));
     });
     /**
      *
      */
-    socket.on("gameIsFinish", ({ canSeeTotalScore }) => {
+    socket.on("gameIsFinish", ({ canSeeTotalScore }, callback) => {
+      if (callback) {
+        callback({ status: 200 });
+      }
       dispatch(updateSeeTotalScore(canSeeTotalScore));
     });
     /**
@@ -118,7 +149,13 @@ const WebSockets = () => {
       /**
        * If user reload the page, save new socket connection to the server
        */
-      socket.emit("saveUser", { uuid: ws.uuid });
+      socket
+        .timeout(5000)
+        .emit("saveUser", { uuid: ws.uuid }, (err, response) => {
+          if (err) {
+            console.log(`socket error: saveUser: ${err}`);
+          }
+        });
       initMainThread();
     }
   }, [ws]);

@@ -16,13 +16,18 @@ export const Login = () => {
 
   function loginUser() {
     if (!!pseudo) {
-      socket.emit(
+      socket.timeout(5000).emit(
         "login",
         {
           uuid: uuid,
           pseudo: pseudo,
         },
-        ({ user }) => {
+        (err, response) => {
+          if (err) {
+            console.log(`socket error: login: ${err}`);
+            return;
+          }
+          let { user } = response;
           dispatch(login({ user: user }));
         }
       );

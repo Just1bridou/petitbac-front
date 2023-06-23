@@ -43,13 +43,25 @@ export const Game = () => {
    * When party stop
    */
   socket.removeListener("stopGame");
-  socket.on("stopGame", () => {
+  socket.on("stopGame", (data, callback) => {
+    if (callback) {
+      callback({ status: 200 });
+    }
+
     setDisabled(true);
-    socket.emit("savePartyWords", {
-      uuid: user.uuid,
-      partyUUID: party.uuid,
-      words: inputWord,
-    });
+    socket.timeout(5000).emit(
+      "savePartyWords",
+      {
+        uuid: user.uuid,
+        partyUUID: party.uuid,
+        words: inputWord,
+      },
+      (err, _) => {
+        if (err) {
+          console.log(`socket error: savePartyWords: ${err}`);
+        }
+      }
+    );
   });
 
   return (

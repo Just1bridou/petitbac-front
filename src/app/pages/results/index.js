@@ -158,15 +158,25 @@ export const Results = () => {
                                 )?.vote
                               }
                               onClick={() => {
-                                socket.emit("changeVote", {
-                                  uuid: user.uuid,
-                                  answerUUID: answer.uuid,
-                                  partyUUID: party.uuid,
-                                  wordIndex: index,
-                                  vote: !actualAnswer.votes.find(
-                                    (v) => v.uuid === user.uuid
-                                  )?.vote,
-                                });
+                                socket.timeout(5000).emit(
+                                  "changeVote",
+                                  {
+                                    uuid: user.uuid,
+                                    answerUUID: answer.uuid,
+                                    partyUUID: party.uuid,
+                                    wordIndex: index,
+                                    vote: !actualAnswer.votes.find(
+                                      (v) => v.uuid === user.uuid
+                                    )?.vote,
+                                  },
+                                  (err, _) => {
+                                    if (err) {
+                                      console.log(
+                                        `socket error: changeVote: ${err}`
+                                      );
+                                    }
+                                  }
+                                );
                               }}
                             />
                           </div>

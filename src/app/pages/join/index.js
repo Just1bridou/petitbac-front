@@ -20,18 +20,27 @@ export const JoinPage = () => {
 
   const joinUser = () => {
     if (!!pseudo) {
-      socket.emit(
+      socket.timeout(5000).emit(
         "joinRoom",
         {
           uuid: uuid,
           pseudo: pseudo,
           roomUUID: id,
         },
-        (ack) => {
-          if (!ack.error) {
-            dispatch(login({ user: ack.user }));
-            dispatch(createParty({ party: ack.party }));
-            socket.emit("saveUser", { uuid: uuid });
+        (err, response) => {
+          if (err) {
+            console.log(`socket error: joinRoom: ${err}`);
+            return;
+          }
+
+          if (!response.error) {
+            dispatch(login({ user: response.user }));
+            dispatch(createParty({ party: response.party }));
+            socket.timeout(5000).emit("saveUser", { uuid: uuid }, (err, _) => {
+              if (err) {
+                console.log(`socket error: saveUser: ${err}`);
+              }
+            });
             navigate("/waiting");
           }
         }

@@ -30,19 +30,35 @@ export const Waiting = () => {
   function addNewWord() {
     if (!inputWord.trim()) return;
     if (!user.admin) return;
-    socket.emit("addPartyWord", {
-      uuid: party.uuid,
-      newWord: inputWord,
-    });
+    socket.timeout(5000).emit(
+      "addPartyWord",
+      {
+        uuid: party.uuid,
+        newWord: inputWord,
+      },
+      (err, _) => {
+        if (err) {
+          console.log(`socket error: addPartyWord: ${err}`);
+        }
+      }
+    );
     setInputWord("");
   }
 
   function removePartyWord(word) {
     if (!user.admin) return;
-    socket.emit("removePartyWord", {
-      uuid: party.uuid,
-      word: word,
-    });
+    socket.timeout(5000).emit(
+      "removePartyWord",
+      {
+        uuid: party.uuid,
+        word: word,
+      },
+      (err, _) => {
+        if (err) {
+          console.log(`socket error: removePartyWord: ${err}`);
+        }
+      }
+    );
   }
 
   return (
@@ -144,10 +160,18 @@ export const Waiting = () => {
             selected={party?.mode}
             onClick={(mode) => {
               if (!user.admin) return;
-              socket.emit("changePartyMode", {
-                uuid: party.uuid,
-                mode,
-              });
+              socket.timeout(5000).emit(
+                "changePartyMode",
+                {
+                  uuid: party.uuid,
+                  mode,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: changePartyMode: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <Title
@@ -163,10 +187,18 @@ export const Waiting = () => {
             value={party?.time}
             setValue={(time) => {
               if (!user.admin) return;
-              socket.emit("changePartyTime", {
-                uuid: party.uuid,
-                time,
-              });
+              socket.timeout(5000).emit(
+                "changePartyTime",
+                {
+                  uuid: party.uuid,
+                  time,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: changePartyTime: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <RoundsInput
@@ -174,10 +206,18 @@ export const Waiting = () => {
             value={party?.rounds}
             setValue={(rounds) => {
               if (!user.admin) return;
-              socket.emit("changePartyRounds", {
-                uuid: party.uuid,
-                rounds,
-              });
+              socket.timeout(5000).emit(
+                "changePartyRounds",
+                {
+                  uuid: party.uuid,
+                  rounds,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: changePartyRounds: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <FlagsCard
@@ -185,10 +225,18 @@ export const Waiting = () => {
             value={party.language}
             setValue={(flag) => {
               if (!user.admin) return;
-              socket.emit("changePartyLanguage", {
-                uuid: party.uuid,
-                language: flag,
-              });
+              socket.timeout(5000).emit(
+                "changePartyLanguage",
+                {
+                  uuid: party.uuid,
+                  language: flag,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: changePartyLanguage: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <SwitchCard
@@ -197,10 +245,18 @@ export const Waiting = () => {
             value={party?.visibility === "public"}
             setValue={(isPublic) => {
               if (!user.admin) return;
-              socket.emit("changePartyVisibility", {
-                uuid: party.uuid,
-                isPublic,
-              });
+              socket.timeout(5000).emit(
+                "changePartyVisibility",
+                {
+                  uuid: party.uuid,
+                  isPublic,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: changePartyVisibility: ${err}`);
+                  }
+                }
+              );
             }}
           />
         </div>

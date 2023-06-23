@@ -52,7 +52,11 @@ export const Chat = ({
   let chatFeed = party?.chat ?? [];
 
   socket.removeListener("newChatMessage");
-  socket.on("newChatMessage", (data) => {
+  socket.on("newChatMessage", (data, callback) => {
+    if (callback) {
+      callback({ status: 200 });
+    }
+
     let newMsg = data.chat[data.chat.length - 1];
     let str = `${newMsg.user} à dit : ${newMsg.message}`;
     !isMuted && newMsg.user !== user.pseudo && read(str);
@@ -64,11 +68,19 @@ export const Chat = ({
   });
 
   function sendMessage() {
-    socket.emit("newChatMessage", {
-      partyUUID: party.uuid,
-      userUUID: user.uuid,
-      message,
-    });
+    socket.timeout(5000).emit(
+      "newChatMessage",
+      {
+        partyUUID: party.uuid,
+        userUUID: user.uuid,
+        message,
+      },
+      (err, _) => {
+        if (err) {
+          console.log(`socket error: newChatMessage: ${err}`);
+        }
+      }
+    );
   }
 
   const scrollToBottom = () => {

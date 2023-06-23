@@ -332,7 +332,11 @@ export const FlashPage = () => {
   };
 
   function getThemesList() {
-    socket.emit("getThemesList", (data) => {
+    socket.timeout(5000).emit("getThemesList", (err, data) => {
+      if (err) {
+        console.log(`socket error: getThemesList: ${err}`);
+        return;
+      }
       // setActualLetter(data.letter);
       setThemesList(data.themes);
       setMaxIndex(data.themes.length - 1);
@@ -438,14 +442,19 @@ export const FlashPage = () => {
 
     if (!inputWord?.trim()) return;
 
-    socket.emit(
+    socket.timeout(5000).emit(
       "verifyGame",
       {
         theme: themesList[index].theme,
         letter: themesList[index].letter,
         word: inputWord.trim(),
       },
-      (res) => {
+      (err, res) => {
+        if (err) {
+          console.log(`socket error: verifyGame: ${err}`);
+          return;
+        }
+
         if (res.finded) {
           setInputWord("");
           updateScore(50 + res.score, true);
@@ -476,7 +485,11 @@ export const FlashPage = () => {
           "Erreur signalée, un administrateur va vérifier si le mot et valide pour l'ajouter au dictionnaire",
       })
     );
-    socket.emit("reportError", data, (res) => {});
+    socket.timeout(5000).emit("reportError", data, (err, res) => {
+      if (err) {
+        console.log(`socket error: reportError: ${err}`);
+      }
+    });
   }
 
   useEffect(() => {

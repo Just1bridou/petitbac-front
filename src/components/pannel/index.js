@@ -257,10 +257,18 @@ const WaitingPannel = () => {
                   <IconButton
                     size="small"
                     onClick={() => {
-                      socket.emit("kickUser", {
-                        partyUUID: party.uuid,
-                        uuid: user.uuid,
-                      });
+                      socket.timeout(5000).emit(
+                        "kickUser",
+                        {
+                          partyUUID: party.uuid,
+                          uuid: user.uuid,
+                        },
+                        (err, _) => {
+                          if (err) {
+                            console.log(`socket error: kickUser: ${err}`);
+                          }
+                        }
+                      );
                     }}
                   >
                     <FontAwesomeIcon icon="right-from-bracket" />
@@ -331,10 +339,18 @@ const WaitingPannel = () => {
               borderRadius: "15px",
             }}
             onClick={() => {
-              socket.emit("readyUser", {
-                partyUUID: party.uuid,
-                uuid: user.uuid,
-              });
+              socket.timeout(5000).emit(
+                "readyUser",
+                {
+                  partyUUID: party.uuid,
+                  uuid: user.uuid,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: readyUser: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <StyledBadge badgeContent={unreadMessages} color="primary">
@@ -406,9 +422,17 @@ const GamePannel = () => {
               borderRadius: "15px",
             }}
             onClick={() => {
-              socket.emit("stopGame", {
-                uuid: party.uuid,
-              });
+              socket.timeout(5000).emit(
+                "stopGame",
+                {
+                  uuid: party.uuid,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: stopGame: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <StyledBadge badgeContent={unreadMessages} color="primary">
@@ -481,10 +505,18 @@ const ResultsPannel = () => {
               borderRadius: "15px",
             }}
             onClick={() => {
-              socket.emit("nextRound", {
-                partyUUID: party.uuid,
-                uuid: user.uuid,
-              });
+              socket.timeout(5000).emit(
+                "nextRound",
+                {
+                  partyUUID: party.uuid,
+                  uuid: user.uuid,
+                },
+                (err, _) => {
+                  if (err) {
+                    console.log(`socket error: nextRound: ${err}`);
+                  }
+                }
+              );
             }}
           />
           <StyledBadge badgeContent={unreadMessages} color="primary">
@@ -639,7 +671,13 @@ export const Pannel = () => {
                 dispatch(resetParty());
                 dispatch(resetServer());
                 dispatch(resetMisc());
-                socket.emit("disconnected", { uuid: ws.uuid });
+                socket
+                  .timeout(5000)
+                  .emit("disconnected", { uuid: ws.uuid }, (err, _) => {
+                    if (err) {
+                      console.log(`socket error: disconnected: ${err}`);
+                    }
+                  });
                 navigate("/");
               }}
             >
@@ -655,10 +693,18 @@ export const Pannel = () => {
             <IconButton
               size="small"
               onClick={() => {
-                socket.emit("userLeaveParty", {
-                  partyUUID: party.uuid,
-                  uuid: user.uuid,
-                });
+                socket.timeout(5000).emit(
+                  "userLeaveParty",
+                  {
+                    partyUUID: party.uuid,
+                    uuid: user.uuid,
+                  },
+                  (err, _) => {
+                    if (err) {
+                      console.log(`socket error: userLeaveParty: ${err}`);
+                    }
+                  }
+                );
                 dispatch(resetParty());
               }}
             >

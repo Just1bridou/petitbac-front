@@ -75,9 +75,18 @@ export const Lobby = () => {
   const navigate = useNavigate();
 
   const createPrivateParty = () => {
-    socket.emit("createPrivateParty", { uuid: uuid }, ({ party }) => {
-      dispatch(createParty({ party: party }));
-    });
+    socket
+      .timeout(5000)
+      .emit("createPrivateParty", { uuid: uuid }, (err, response) => {
+        if (err) {
+          console.log(`socket error: createPrivateParty: ${err}`);
+          return;
+        }
+
+        let { party } = response;
+
+        dispatch(createParty({ party: party }));
+      });
   };
 
   return (
@@ -102,18 +111,29 @@ export const Lobby = () => {
                 party={party}
                 index={index}
                 onClick={() => {
-                  socket.emit(
+                  socket.timeout(5000).emit(
                     "joinRoom",
                     {
                       uuid: uuid,
                       pseudo: user.pseudo,
                       roomUUID: party.uuid,
                     },
-                    (ack) => {
-                      if (!ack.error) {
-                        dispatch(login({ user: ack.user }));
-                        dispatch(createParty({ party: ack.party }));
-                        socket.emit("saveUser", { uuid: uuid });
+                    (err, response) => {
+                      if (err) {
+                        console.log(`socket error: joinRoom: ${err}`);
+                        return;
+                      }
+
+                      if (!response.error) {
+                        dispatch(login({ user: response.user }));
+                        dispatch(createParty({ party: response.party }));
+                        socket
+                          .timeout(5000)
+                          .emit("saveUser", { uuid: uuid }, (err, _) => {
+                            if (err) {
+                              console.log(`socket error: saveUser: ${err}`);
+                            }
+                          });
                         navigate("/waiting");
                       }
                     }
