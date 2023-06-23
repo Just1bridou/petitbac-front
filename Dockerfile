@@ -1,7 +1,7 @@
 FROM node:18.14-alpine
 WORKDIR /app
 COPY ["package.json", "package-lock.json*", "./"]
-RUN npm i -f
+RUN yarn
 COPY . .
 RUN yarn build
 RUN yarn global add serve
