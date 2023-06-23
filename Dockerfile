@@ -4,4 +4,6 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm i -f
 COPY . .
 RUN npm run build
-CMD [ "serve", "-s", "build", "-l", "3000" ]
+RUN npm i -g serve
+ENV PORT=3000
+CMD [ "serve", "-s", "build" ]
